@@ -16,3 +16,10 @@ $.get(feedUrl, function(data) {
   });
   $('#image-title').text(image.title);
 });
+
+$('#startpage-link, #appspage-link').click(function(event) {
+  event.preventDefault();
+  chrome.tabs.update({
+    url: event.target.href
+  });
+});
