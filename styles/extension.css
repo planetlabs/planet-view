@@ -24,7 +24,6 @@ body {
       -ms-animation: fadein .2s;
           animation: fadein .2s;
   background-color: #000;
-  background-image: url(../images/bg.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   -webkit-background-size: cover;
