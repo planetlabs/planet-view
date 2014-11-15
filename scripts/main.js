@@ -1,31 +1,58 @@
 // var galleryUrl = 'https://www.planet.com/gallery_rss.xml';
 var galleryUrl = 'data/gallery_rss.xml';
 
+// navigation to other chrome pages
 d3.selectAll('.page-link').on('click', function() {
   d3.event.preventDefault();
   chrome.tabs.update({url: d3.event.target.href});
 });
 
+// trigger data loading
 queue()
     .defer(d3.json, 'data/world-110m.json')
     .defer(d3.xml, galleryUrl)
     .await(ready);
 
+/**
+ * Handle loaded data.
+ * @param {Error} err Network error.
+ * @param {Object} world Land and country data.
+ * @param {Document} gallery Gallery feed.
+ */
 function ready(err, world, gallery) {
   if (err) {
     console.error(err);
     return;
   }
-
   var items = parse(gallery);
+  var scene = new Scene('#scene');
+  var globe = new Globe('#map', world);
+
+  d3.select('#map').on('click', function() {
+    showRandom(items, scene, globe);
+  });
+
+  showRandom(items, scene, globe);
+}
+
+/**
+ * Show a random scene.
+ * @param {Array.<Object>} items List of parsed gallery entries.
+ * @param {Scene} scene Scene object.
+ * @param {Globe} globe Globe object.
+ */
+function showRandom(items, scene, globe) {
   var item = items[Math.floor(Math.random() * items.length)];
 
-  var scene = new Scene('#scene', item);
-
-  var globe = new Globe('#map', world);
+  scene.show(item);
   globe.show(item.center);
 }
 
+/**
+ * Parse the gallery feed.
+ * @param {Document} gallery Gallery feed.
+ * @return {Array.<Object>} List of parsed items.
+ */
 function parse(gallery) {
   var items = [];
   d3.select(gallery).selectAll('item').each(function() {
@@ -57,27 +84,59 @@ function parse(gallery) {
   return items;
 }
 
-
-function Scene(selector, data) {
+/**
+ * Object for displaying a single image.
+ * @param {string} selector Selector for target element containing the scene.
+ * @constructor
+ */
+function Scene(selector) {
   this.target = d3.select(selector);
+}
+
+/**
+ * Show a scene.
+ * @param {Object} data Data for an individual scene.
+ */
+Scene.prototype.show = function(data) {
+  this.hide();
   this.url = data.image;
 
   var image = new Image();
-  image.onload = this.show.bind(this);
+  image.onload = this._show.bind(this, data.image);
   image.src = data.image;
 
   // TODO: rework scene markup
   d3.select('#image-title').text(data.title);
-}
+};
 
-Scene.prototype.show = function() {
-  var target = d3.select(this.selector);
+/**
+ * Handle image loading.
+ * @param {string} url The url of the loaded image.
+ */
+Scene.prototype._show = function(url) {
+  if (url != this.url) {
+    // another image is loading
+    return;
+  }
   this.target.style({
-    'background-image': 'url(' + this.url + ')'
+    'background-image': 'url(' + url + ')'
   });
   this.target.classed('shown', true);
-}
+};
 
+/**
+ * Hide a scene.
+ */
+Scene.prototype.hide = function() {
+  delete this.url;
+  this.target.classed('shown', false);
+};
+
+/**
+ * Rendering of a globe.
+ * @param {string} selector Selector for target element containing the globe.
+ * @param {Object} data Parsed topojson for the world.
+ */
 function Globe(selector, data) {
   var diameter = 80;
 
@@ -100,6 +159,10 @@ function Globe(selector, data) {
   this.render();
 }
 
+/**
+ * Render the globe with an optional locator circle.
+ * @param {Object} circle Data for the optional locator circle.
+ */
 Globe.prototype.render = function(circle) {
   var context = this.context;
   var diameter = context.canvas.width;
@@ -124,6 +187,10 @@ Globe.prototype.render = function(circle) {
   }
 };
 
+/**
+ * Rotate the globe to show the given point.
+ * @param {Array.<number>} point Geographic location (lon, lat).
+ */
 Globe.prototype.show = function(point) {
   var circle = d3.geo.circle().origin(point).angle(6)();
   var rotate = d3.interpolate(this.projection.rotate(),
