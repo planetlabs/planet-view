@@ -16,15 +16,13 @@ function ready(err, world, gallery) {
     console.error(err);
     return;
   }
+
   var items = parse(gallery);
-  var globe = new Globe('#map', world);
-
   var item = items[Math.floor(Math.random() * items.length)];
-  d3.select('#image-title').text(item.title);
-  d3.select('#scene').style({
-    'background-image': 'url(' + item.image + ')'
-  });
 
+  var scene = new Scene('#scene', item);
+
+  var globe = new Globe('#map', world);
   globe.show(item.center);
 }
 
@@ -57,6 +55,27 @@ function parse(gallery) {
     });
   });
   return items;
+}
+
+
+function Scene(selector, data) {
+  this.target = d3.select(selector);
+  this.url = data.image;
+
+  var image = new Image();
+  image.onload = this.show.bind(this);
+  image.src = data.image;
+
+  // TODO: rework scene markup
+  d3.select('#image-title').text(data.title);
+}
+
+Scene.prototype.show = function() {
+  var target = d3.select(this.selector);
+  this.target.style({
+    'background-image': 'url(' + this.url + ')'
+  });
+  this.target.classed('shown', true);
 }
 
 function Globe(selector, data) {

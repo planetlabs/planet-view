@@ -32,6 +32,12 @@ a:hover {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+#scene.shown {
+  opacity: 1;
 }
 
 ul.nav {
