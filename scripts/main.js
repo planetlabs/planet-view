@@ -1,5 +1,5 @@
-// var galleryUrl = 'https://www.planet.com/gallery_rss.xml';
-var galleryUrl = 'data/gallery_rss.xml';
+// var galleryUrl = 'https://www.planet.com/gallery-atom.xml';
+var galleryUrl = 'data/gallery-atom.xml';
 
 // navigation to other chrome pages
 d3.selectAll('.page-link').on('click', function() {
@@ -24,64 +24,63 @@ function ready(err, world, gallery) {
     console.error(err);
     return;
   }
-  var items = parse(gallery);
+  var entries = parse(gallery);
   var scene = new Scene('#scene');
   var globe = new Globe('#map', world);
 
   d3.select('#map').on('click', function() {
-    showRandom(items, scene, globe);
+    showRandom(entries, scene, globe);
   });
 
-  showRandom(items, scene, globe);
+  showRandom(entries, scene, globe);
 }
 
 /**
  * Show a random scene.
- * @param {Array.<Object>} items List of parsed gallery entries.
+ * @param {Array.<Object>} entries List of parsed gallery entries.
  * @param {Scene} scene Scene object.
  * @param {Globe} globe Globe object.
  */
-function showRandom(items, scene, globe) {
-  var item = items[Math.floor(Math.random() * items.length)];
+function showRandom(entries, scene, globe) {
+  var entry = entries[Math.floor(Math.random() * entries.length)];
 
-  scene.show(item);
-  globe.show(item.center);
+  scene.show(entry);
+  globe.show(entry.center);
 }
 
 /**
  * Parse the gallery feed.
  * @param {Document} gallery Gallery feed.
- * @return {Array.<Object>} List of parsed items.
+ * @return {Array.<Object>} List of parsed entries.
  */
 function parse(gallery) {
-  var items = [];
-  d3.select(gallery).selectAll('item').each(function() {
-    var item = d3.select(this);
-    var title = item.select('title').text();
-    var description = item.select('description').text();
-    var link = item.select('link').text();
+  var entries = [];
+  d3.select(gallery).selectAll('entry').each(function() {
+    var entry = d3.select(this);
+    var title = entry.select('title').text();
+
+    var link = entry.select('link[rel="alternate"][type="text/html"]')
+        .attr('href');
+
+    var image = entry.select('link[rel="enclosure"][type="image/jpeg"]')
+        .attr('href');
 
     var points = this.getElementsByTagNameNS('http://www.georss.org/georss',
         'point');
     if (points.length !== 1) {
-      console.log('Expected georss:point in item', item);
+      console.log('Expected georss:point in entry', entry);
       return;
     }
     var center = points[0].textContent.split(/\s*[,\s]\s*/).reverse();
 
-    var match = description.match(/img .*?src="(.*?)"/);
-    if (!match) {
-      console.log('Expected description to include img', description);
-      return;
-    }
-    items.push({
+    entries.push({
       title: title,
       link: link,
+      image: image,
       center: center,
-      image: match[1]
     });
   });
-  return items;
+  return entries;
 }
 
 /**
