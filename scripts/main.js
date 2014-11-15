@@ -169,10 +169,12 @@ Globe.prototype.render = function(circle) {
 
   context.clearRect(0, 0, diameter, diameter);
 
+  context.globalAlpha = 0.5;
   context.fillStyle = '#666';
   context.beginPath();
   this.path({type: 'Sphere'});
   context.fill();
+  context.globalAlpha = 1;
 
   context.fillStyle = '#fff';
   context.beginPath();
