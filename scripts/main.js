@@ -106,7 +106,8 @@ Scene.prototype.show = function(data) {
   image.src = data.image;
 
   // TODO: rework scene markup
-  d3.select('#image-title').text(data.title);
+  d3.select('#image-title')
+      .html('<a href="' + data.link + '">' + data.title + '</a>');
 };
 
 /**
