@@ -21,7 +21,7 @@ function ready(err, world, gallery) {
 
   var item = items[Math.floor(Math.random() * items.length)];
   d3.select('#image-title').text(item.title);
-  d3.select('.background').style({
+  d3.select('#scene').style({
     'background-image': 'url(' + item.image + ')'
   });
 
