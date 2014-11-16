@@ -2,7 +2,7 @@
    "manifest_version": 2,
    "name": "Planet View",
    "description": "Planet View displays a beautiful satellite image from Planet Labs every time you open a new tab.",
-   "version": "0.2.0",
+   "version": "0.3.0",
    "icons": {
       "128": "images/icon-128.png",
       "48": "images/icon-48.png",
@@ -11,9 +11,8 @@
    "permissions": [
       "https://www.planet.com/*"
    ],
-
    "chrome_url_overrides": {
-      "newtab": "planet-gallery.html"
-   }
-
+      "newtab": "index.html"
+   },
+   "incognito": "split"
 }
