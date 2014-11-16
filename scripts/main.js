@@ -1,5 +1,4 @@
-// var galleryUrl = 'https://www.planet.com/gallery-atom.xml';
-var galleryUrl = 'data/gallery-atom.xml';
+var galleryUrl = 'https://www.planet.com/gallery-atom.xml';
 
 // navigation to other chrome pages
 d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
