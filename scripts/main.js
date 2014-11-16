@@ -27,24 +27,24 @@ function ready(err, world, gallery) {
   var scene = new Scene('#scene');
   var globe = new Globe('#map', world);
 
+  var player = new Player(entries, scene, globe);
+
   d3.select('#map').on('click', function() {
-    showRandom(entries, scene, globe);
+    player.new();
   });
 
-  showRandom(entries, scene, globe);
-}
+  d3.select('body').on('keydown', function() {
+    switch (d3.event.keyCode) {
+      case 37: // ←
+        player.previous();
+        break;
+      case 39: // →
+        player.next();
+        break;
+    }
+  });
 
-/**
- * Show a random scene.
- * @param {Array.<Object>} entries List of parsed gallery entries.
- * @param {Scene} scene Scene object.
- * @param {Globe} globe Globe object.
- */
-function showRandom(entries, scene, globe) {
-  var entry = entries[Math.floor(Math.random() * entries.length)];
-
-  scene.show(entry);
-  globe.show(entry.center);
+  player.next();
 }
 
 /**
@@ -205,3 +205,61 @@ Globe.prototype.show = function(point) {
   });
 };
 
+/**
+ * Shows entries and manages history.
+ * @param {Array.<Object>} entries List of gallery entries.
+ * @param {[type]} scene Scene view.
+ * @param {[type]} globe Globe view.
+ */
+function Player(entries, scene, globe) {
+  this.entries = entries;
+  this.scene = scene;
+  this.globe = globe;
+  this.history = [];
+  this.index = -1;
+}
+
+/**
+ * Show the next entry.
+ */
+Player.prototype.next = function() {
+  ++this.index;
+  var entry = this.history[this.index];
+  if (!entry) {
+    entry = this.entries[Math.floor(Math.random() * this.entries.length)];
+    this.history[this.index] = entry;
+  }
+  this.show(entry);
+}
+
+/**
+ * Show the previous entry.
+ */
+Player.prototype.previous = function() {
+  this.index = Math.max(0, this.index - 1);
+  var entry = this.history[this.index];
+  if (!entry) {
+    throw new Error('Expected history at index ' + this.index);
+  }
+  this.show(entry);
+}
+
+/**
+ * Show a new entry.
+ */
+Player.prototype.new = function() {
+  ++this.index;
+  var entry = this.entries[Math.floor(Math.random() * this.entries.length)];
+  this.history[this.index] = entry;
+  this.history.length = this.index + 1;
+  this.show(entry);
+}
+
+/**
+ * Show the given entry.
+ * @param {Object} entry Object with scene info.
+ */
+Player.prototype.show = function(entry) {
+  this.scene.show(entry);
+  this.globe.show(entry.center);
+}
