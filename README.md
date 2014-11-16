@@ -4,9 +4,9 @@ Planet View displays a beautiful satellite image from Planet Labs every time you
 
 ## Getting started
 
-Installing is easy. Download the directory (Click 'Download ZIP' button to right.) Unzip the zip file. In Chrome, open extensions (Window > Extensions.) Click 'Developer mode' check box. Click 'Load unpacked extension...' button. Navigate to  directory of extension. Voila. 
+Installing is easy. Find the ["Planet View" extension](https://chrome.google.com/webstore/detail/planet-view/hhhgdbldiopbpblfcohjaeinjjciplho) in the Chrome Web Store.  Click the "+ Free" button to install the extension.  Voila.
 
-![Demo](http://product-design.s3.amazonaws.com/planet-view-chrome-ext/quickcast.gif)
+[![installation](https://cloud.githubusercontent.com/assets/41094/5060900/8fa2e39a-6d29-11e4-86ef-1f9f95ed0cd0.gif)](https://chrome.google.com/webstore/detail/planet-view/hhhgdbldiopbpblfcohjaeinjjciplho)
 
 ## Contribuitors
 
