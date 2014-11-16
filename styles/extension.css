@@ -47,24 +47,17 @@ ul.nav {
   margin: 0;
   padding: 0;
   font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+body:hover ul.nav {
+  opacity: 1;
 }
 
 li.nav-item {
   display: inline-block;
   margin-left: 1rem;
-}
-
-.page-link {
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-
-body:hover .page-link {
-  opacity: 0.85;
-}
-
-.page-link:hover {
-  opacity: 1;
 }
 
 .attribution {
