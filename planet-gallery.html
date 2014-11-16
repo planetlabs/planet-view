@@ -7,30 +7,31 @@
   <link href="styles/extension.css" rel="stylesheet">
 </head>
 <body>
-  <div class="background"></div>
-  <div class="content">
-    <ul class="nav nav-hover-effect">
-      <li>
-        <a id="appspage-link" href="chrome://apps/" title="Apps Tab" class="page-link"></a>
-      </li>
-      <li>
-        <a id="startpage-link" href="chrome-search://local-ntp/local-ntp.html" title="Default New Tab" class="page-link"></a>
-      </li>
-    </ul>
-    <div class="attribution">
-      <a href="https://www.planet.com/"><span class="watermark"></span></a>
-      <span class="attribution-copy">
-        <span id="image-title">loading ...</span>
-        <br>Image © 2014 Planet Labs Inc.
-      </span>
-    </div>
-    <div class="license">
+  <div id="scene"></div>
+
+  <ul class="nav">
+    <li class="nav-item">
+      <a data-hook="chrome-link" href="chrome://apps/">Apps Tab</a>
+    </li>
+    <li class="nav-item">
+      <a data-hook="chrome-link" href="chrome-search://local-ntp/local-ntp.html">Default New Tab</a>
+    </li>
+  </ul>
+
+  <div class="attribution">
+    <a href="https://www.planet.com/"><span class="watermark"></span></a>
+    <span class="attribution-copy">
+      <span id="image-title">loading ...</span>
+      <br>
       <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
-        <span class="creative-commons"></span>
+        Image © 2014 Planet Labs Inc.
       </a>
-    </div>
+    </span>
   </div>
-  <script src="scripts/jquery-2.1.1.min.js"></script>
+  <div id="map"></div>
+  <script src="scripts/d3.v3.min.js"></script>
+  <script src="scripts/queue.v1.min.js"></script>
+  <script src="scripts/topojson.v1.min.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 </html>
