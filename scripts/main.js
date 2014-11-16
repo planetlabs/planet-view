@@ -2,7 +2,7 @@
 var galleryUrl = 'data/gallery-atom.xml';
 
 // navigation to other chrome pages
-d3.selectAll('.page-link').on('click', function() {
+d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
   d3.event.preventDefault();
   chrome.tabs.update({url: d3.event.target.href});
 });
@@ -182,7 +182,7 @@ Globe.prototype.render = function(circle) {
   context.fill();
 
   if (circle) {
-    context.fillStyle = '#333';
+    context.fillStyle = '#18aae6';
     context.beginPath();
     this.path(circle);
     context.fill();
