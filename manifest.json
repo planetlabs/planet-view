@@ -11,6 +11,22 @@
    "permissions": [
       "https://www.planet.com/*"
    ],
+   "commands": {
+      "show_next": {
+         "suggested_key": {
+            "default": "Ctrl+Right",
+            "mac": "Command+Right"
+         },
+         "description": "Show the next scene"
+      },
+      "show_previous": {
+         "suggested_key": {
+            "default": "Ctrl+Left",
+            "mac": "Command+Left"
+         },
+         "description": "Show the previous scene"
+      }
+   },
    "chrome_url_overrides": {
       "newtab": "index.html"
    },

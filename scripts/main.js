@@ -44,6 +44,17 @@ function ready(err, world, gallery) {
     }
   });
 
+  chrome.commands.onCommand.addListener(function(command) {
+    switch (command) {
+      case 'show_previous':
+        player.previous();
+        break;
+      case 'show_next':
+        player.next();
+        break;
+    }
+  });
+
   player.next();
 }
 
