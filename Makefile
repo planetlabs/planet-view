@@ -2,4 +2,4 @@
 
 extension.zip: manifest.json
 	@rm -f $@
-	zip -r $@ data images scripts styles manifest.json index.html
+	zip -r $@ data images scripts styles fonts manifest.json index.html
