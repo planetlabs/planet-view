@@ -61,13 +61,15 @@ function ready(err, world, gallery) {
 /**
  * Parse the gallery feed.
  * @param {Document} gallery Gallery feed.
- * @return {Array.<Object>} List of parsed entries.
+ * @return {Object} Entries with id as key.
  */
 function parse(gallery) {
-  var entries = [];
+  var entries = {};
   d3.select(gallery).selectAll('entry').each(function() {
     var entry = d3.select(this);
+
     var title = entry.select('title').text();
+    var id = entry.select('id').text();
 
     var link = entry.select('link[rel="alternate"][type="text/html"]')
         .attr('href');
@@ -83,12 +85,13 @@ function parse(gallery) {
     }
     var center = points[0].textContent.split(/\s*[,\s]\s*/).reverse();
 
-    entries.push({
+    entries[id] = {
       title: title,
+      id: id,
       link: link,
       image: image,
       center: center,
-    });
+    };
   });
   return entries;
 }
@@ -218,7 +221,7 @@ Globe.prototype.show = function(point) {
 
 /**
  * Shows entries and manages history.
- * @param {Array.<Object>} entries List of gallery entries.
+ * @param {Object} entries Gallery entries.
  * @param {[type]} scene Scene view.
  * @param {[type]} globe Globe view.
  */
@@ -228,19 +231,42 @@ function Player(entries, scene, globe) {
   this.globe = globe;
   this.history = [];
   this.index = -1;
+  this.store = new Store();
+  this.syncStore();
+}
+
+/**
+ * Synchronize the views store.  This keeps track of the number of new views per
+ * scene.
+ */
+Player.prototype.syncStore = function() {
+  var store = this.store;
+  var values = store.values();
+  var current = {};
+  var id;
+  for (id in this.entries) {
+    if (!(id in values)) {
+      store.set(id, 0);
+    }
+    current[id] = true;
+  };
+  for (id in values) {
+    if (!current[id]) {
+      store.remove(id);
+    }
+  }
 }
 
 /**
  * Show the next entry.
  */
 Player.prototype.next = function() {
-  ++this.index;
-  var entry = this.history[this.index];
-  if (!entry) {
-    entry = this.entries[Math.floor(Math.random() * this.entries.length)];
-    this.history[this.index] = entry;
+  if (!this.history[this.index + 1]) {
+    this.new();
+    return;
   }
-  this.show(entry);
+  ++this.index;
+  this.show(this.history[this.index]);
 }
 
 /**
@@ -248,22 +274,38 @@ Player.prototype.next = function() {
  */
 Player.prototype.previous = function() {
   this.index = Math.max(0, this.index - 1);
-  var entry = this.history[this.index];
-  if (!entry) {
-    throw new Error('Expected history at index ' + this.index);
-  }
-  this.show(entry);
+  this.show(this.history[this.index]);
 }
 
 /**
- * Show a new entry.
+ * Show a new entry.  Truncate any "future" (or next) entries.
  */
 Player.prototype.new = function() {
+  var store = this.store;
+  var views = store.values();
+  var hits = {};
+  var min = Number.POSITIVE_INFINITY;
+  for (var id in views) {
+    var count = views[id];
+    if (count in hits) {
+      hits[count].push(id);
+    } else {
+      hits[count] = [id];
+    }
+    if (count < min) {
+      min = count;
+    }
+  }
+  var candidates = hits[min];
+  var entry = this.entries[
+    candidates[Math.floor(Math.random() * candidates.length)]
+  ];
+
   ++this.index;
-  var entry = this.entries[Math.floor(Math.random() * this.entries.length)];
   this.history[this.index] = entry;
   this.history.length = this.index + 1;
   this.show(entry);
+  this.store.set(entry.id, min + 1);
 }
 
 /**
@@ -274,3 +316,58 @@ Player.prototype.show = function(entry) {
   this.scene.show(entry);
   this.globe.show(entry.center);
 }
+
+/**
+ * Simple object store backed by localStorage.
+ */
+function Store() {
+  this.id = Store.getId();
+  if (!localStorage[this.id]) {
+    localStorage[this.id] = '{}';
+  }
+}
+
+/**
+ * Get all values.
+ * @return {Object} Store values.
+ */
+Store.prototype.values = function() {
+  return JSON.parse(localStorage[this.id]);
+};
+
+/**
+ * Get a stored value.
+ * @param {string} key The key.
+ * @return {*} The value.
+ */
+Store.prototype.get = function(key) {
+  return this.values()[key];
+};
+
+/**
+ * Set a value.
+ * @param {string} key The key.
+ * @param {*} value The value.
+ */
+Store.prototype.set = function(key, value) {
+  var values = this.values();
+  values[key] = value;
+  localStorage[this.id] = JSON.stringify(values);
+};
+
+/**
+ * Remove a key.
+ * @param {string} key The key.
+ */
+Store.prototype.remove = function(key) {
+  var values = this.values();
+  delete values[key];
+  localStorage[this.id] = JSON.stringify(values);
+}
+
+Store.count = 0;
+
+Store.getId = function() {
+  ++Store.count;
+  return 'planet-view-' + Store.count;
+};
