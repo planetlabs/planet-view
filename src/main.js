@@ -1,4 +1,5 @@
 var d3 = require('d3');
+var moment = require('moment');
 var queue = require('queue-async');
 var topojson = require('topojson');
 
@@ -74,6 +75,7 @@ function parse(gallery) {
 
     var title = entry.select('title').text();
     var id = entry.select('id').text();
+    var updated = entry.select('updated').text();
 
     var link = entry.select('link[rel="alternate"][type="text/html"]')
         .attr('href');
@@ -94,7 +96,8 @@ function parse(gallery) {
       id: id,
       link: link,
       image: image,
-      center: center
+      center: center,
+      updated: updated
     };
   });
   return entries;
@@ -122,8 +125,9 @@ Scene.prototype.show = function(data) {
   image.src = data.image;
 
   // TODO: rework scene markup
+  var title = data.title + ' (' + moment(data.updated).calendar() + ')';
   d3.select('#image-title')
-      .html('<a href="' + data.link + '">' + data.title + '</a>');
+      .html('<a href="' + data.link + '">' + title + '</a>');
 };
 
 /**
