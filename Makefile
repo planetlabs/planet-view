@@ -24,8 +24,13 @@ $(ZIP): clean dist
 	cd $(DIST_DIR) && zip -r $@ .
 
 $(UPDATE): node_modules/.install
-	@npm version $@
-	@json --in-place -f $(SRC_DIR)/manifest.json -e 'this.version="'`json -f package.json version`'"';
+	@source `git --exec-path`/git-sh-setup && require_clean_work_tree "bump version" "Please commit or stash them."
+	$(eval NEW_VERSION := $(shell semver --increment $@ `json -f package.json version`))
+	@json --in-place -f package.json -e "this.version='$(NEW_VERSION)'";
+	@json --in-place -f $(SRC_DIR)/manifest.json -e "this.version='$(NEW_VERSION)'";
+	@git add package.json $(SRC_DIR)/manifest.json
+	git commit -m "$(NEW_VERSION)"
+	git tag -a "v$(NEW_VERSION)" -m "$(NEW_VERSION)"
 
 .PHONY: release
 release: $(ZIP)
