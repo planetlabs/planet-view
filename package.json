@@ -1,0 +1,35 @@
+{
+  "name": "planet-view-chrome-ext",
+  "version": "0.5.0",
+  "description": "Chrome extension displaying Planet imagery",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/planetlabs/planet-view-chrome-ext.git"
+  },
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/planetlabs/planet-view-chrome-ext/issues"
+  },
+  "homepage": "https://github.com/planetlabs/planet-view-chrome-ext",
+  "scripts": {
+    "test": "make test release",
+    "start": "make start"
+  },
+  "devDependencies": {
+    "autoprefixer": "^4.0.0",
+    "browserify": "^6.3.2",
+    "d3": "^3.4.13",
+    "jscs": "^1.7.3",
+    "json": "^9.0.2",
+    "less": "^2.0.0",
+    "less-plugin-clean-css": "^1.2.0",
+    "queue-async": "^1.0.7",
+    "topojson": "^1.6.18",
+    "watchy": "0.5.4"
+  }
+}
