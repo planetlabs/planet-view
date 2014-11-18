@@ -1,6 +1,6 @@
 {
   "name": "planet-view-chrome-ext",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Chrome extension displaying Planet imagery",
   "repository": {
     "type": "git",
