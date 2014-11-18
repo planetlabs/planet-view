@@ -73,5 +73,5 @@ test: node_modules/.install
 	@lessc --lint $(SRC_ALL_STYLE);
 
 .PHONY: start
-start:
+start: node_modules/.install
 	@watchy --watch package.json,src -- make test dist;
