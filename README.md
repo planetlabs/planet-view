@@ -29,6 +29,8 @@ To create a release, decide whether your changes constitute a major, minor, or p
 
 This updates the version numbers in the `package.json` and `src/manifest.json` files, creates a commit for the new version number, tags this commit, and creates the `extension.zip` archive.  You can then upload the `extension.zip` as a new release and push the commit & tag (`git push --tags origin master`).
 
+[![Current Status](https://secure.travis-ci.org/planetlabs/planet-view-chrome-ext.png?branch=master)](https://travis-ci.org/planetlabs/planet-view-chrome-ext)
+
 ##License
 
 [Apache 2](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
