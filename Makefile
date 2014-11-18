@@ -1,5 +1,77 @@
 .DELETE_ON_ERROR:
+export PATH := ./node_modules/.bin:$(PATH)
 
-extension.zip: manifest.json
+BUILD_DIR := ./build
+SRC_DIR := ./src
+DIST_DIR := $(BUILD_DIR)/dist
+
+SRC_ALL_SCRIPT := $(shell find $(SRC_DIR) -name '*.js')
+SRC_MAIN_SCRIPT := $(shell find $(SRC_DIR) -name 'main.js')
+SRC_ALL_STYLE := $(shell find $(SRC_DIR) -name '*.less')
+SRC_MAIN_STYLE := $(shell find $(SRC_DIR) -name 'main.less')
+SRC_ASSETS := $(shell find $(SRC_DIR) -name 'assets' -type d)
+
+DIST_MAIN_SCRIPT := $(patsubst $(SRC_DIR)/%,$(DIST_DIR)/%,$(SRC_MAIN_SCRIPT))
+DIST_MAIN_STYLE := $(patsubst $(SRC_DIR)/%.less,$(DIST_DIR)/%.css,$(SRC_MAIN_STYLE))
+DIST_ASSETS := $(patsubst $(SRC_DIR)/%,$(DIST_DIR)/%,$(SRC_ASSETS))
+
+ZIP := $(shell pwd -P)/extension.zip
+UPDATE := major minor patch
+
+# Create a release archive for the extension
+$(ZIP): clean dist
 	@rm -f $@
-	zip -r $@ data images scripts styles fonts manifest.json index.html
+	cd $(DIST_DIR) && zip -r $@ .
+
+$(UPDATE): node_modules/.install
+	@npm version $@
+	@json --in-place -f $(SRC_DIR)/manifest.json -e 'this.version="'`json -f package.json version`'"';
+
+.PHONY: release
+release: $(ZIP)
+
+# Install Node based dependencies
+node_modules/.install: package.json
+	@npm prune
+	@npm install
+	@npm dedupe
+	@touch $@
+
+.PHONY: dist
+dist: $(DIST_MAIN_SCRIPT) $(DIST_MAIN_STYLE) $(DIST_DIR)/index.html $(DIST_DIR)/manifest.json $(DIST_ASSETS)
+
+$(DIST_MAIN_SCRIPT): $(SRC_ALL_SCRIPT) node_modules/.install
+	@mkdir -p $(dir $@)
+	@browserify --debug $(patsubst $(DIST_DIR)/%,$(SRC_DIR)/%,./$@) > $@
+
+$(DIST_MAIN_STYLE): $(SRC_ALL_STYLE) node_modules/.install
+	@mkdir -p $(dir $@)
+	@lessc --source-map-less-inline --source-map-map-inline \
+			--source-map-rootpath=$(SRC_DIR) \
+			$(patsubst $(DIST_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | autoprefixer --browsers 'Chrome >= 35' --output $@
+
+$(DIST_DIR)/index.html: $(SRC_DIR)/index.html
+	@mkdir -p $(DIST_DIR)
+	@cp $< $@
+
+$(DIST_DIR)/manifest.json: $(SRC_DIR)/manifest.json
+	@mkdir -p $(DIST_DIR)
+	@cp $< $@
+
+.PHONY: $(DIST_ASSETS)
+$(DIST_ASSETS):
+	@mkdir -p $(dir $@)
+	@rsync --recursive --update --perms --executability $(patsubst $(DIST_DIR)/%,$(SRC_DIR)/%,./$@) $(dir $@)
+
+.PHONY: clean
+clean:
+	@rm -rf $(BUILD_DIR)
+
+.PHONY: test
+test: node_modules/.install
+	@jscs $(SRC_DIR);
+	@lessc --lint $(SRC_ALL_STYLE);
+
+.PHONY: start
+start:
+	@watchy --watch package.json,src -- make test dist;

@@ -1,3 +1,7 @@
+var d3 = require('d3');
+var queue = require('queue-async');
+var topojson = require('topojson');
+
 var galleryUrl = 'https://www.planet.com/gallery-atom.xml';
 
 // navigation to other chrome pages
@@ -8,7 +12,7 @@ d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
 
 // trigger data loading
 queue()
-    .defer(d3.json, 'data/world-110m.json')
+    .defer(d3.json, 'assets/data/world-110m.json')
     .defer(d3.xml, galleryUrl)
     .await(ready);
 
@@ -90,7 +94,7 @@ function parse(gallery) {
       id: id,
       link: link,
       image: image,
-      center: center,
+      center: center
     };
   });
   return entries;
@@ -149,6 +153,7 @@ Scene.prototype.hide = function() {
  * Rendering of a globe.
  * @param {string} selector Selector for target element containing the globe.
  * @param {Object} data Parsed topojson for the world.
+ * @constructor
  */
 function Globe(selector, data) {
   var diameter = 80;
@@ -224,6 +229,7 @@ Globe.prototype.show = function(point) {
  * @param {Object} entries Gallery entries.
  * @param {[type]} scene Scene view.
  * @param {[type]} globe Globe view.
+ * @constructor
  */
 function Player(entries, scene, globe) {
   this.entries = entries;
@@ -249,13 +255,13 @@ Player.prototype.syncStore = function() {
       store.set(id, 0);
     }
     current[id] = true;
-  };
+  }
   for (id in values) {
     if (!current[id]) {
       store.remove(id);
     }
   }
-}
+};
 
 /**
  * Show the next entry.
@@ -267,7 +273,7 @@ Player.prototype.next = function() {
   }
   ++this.index;
   this.show(this.history[this.index]);
-}
+};
 
 /**
  * Show the previous entry.
@@ -275,7 +281,7 @@ Player.prototype.next = function() {
 Player.prototype.previous = function() {
   this.index = Math.max(0, this.index - 1);
   this.show(this.history[this.index]);
-}
+};
 
 /**
  * Show a new entry.  Truncate any "future" (or next) entries.
@@ -306,7 +312,7 @@ Player.prototype.new = function() {
   this.history.length = this.index + 1;
   this.show(entry);
   this.store.set(entry.id, min + 1);
-}
+};
 
 /**
  * Show the given entry.
@@ -315,10 +321,11 @@ Player.prototype.new = function() {
 Player.prototype.show = function(entry) {
   this.scene.show(entry);
   this.globe.show(entry.center);
-}
+};
 
 /**
  * Simple object store backed by localStorage.
+ * @constructor
  */
 function Store() {
   this.id = Store.getId();
@@ -363,10 +370,18 @@ Store.prototype.remove = function(key) {
   var values = this.values();
   delete values[key];
   localStorage[this.id] = JSON.stringify(values);
-}
+};
 
+/**
+ * Store count.
+ * @type {number}
+ */
 Store.count = 0;
 
+/**
+ * Get a unique id for this session.
+ * @return {string} Unique id.
+ */
 Store.getId = function() {
   ++Store.count;
   return 'planet-view-' + Store.count;

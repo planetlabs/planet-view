@@ -13,6 +13,22 @@ Installing is easy. Find the ["Planet View" extension](https://chrome.google.com
 * [Tim Schaub](https://github.com/tschaub)
 * [Jared Volpe](https://github.com/plainspace)
 
+## Development
+
+The development environemnt requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `./build/dist` directory.  To build this directory and start a file watcher that rebuilds on all changes, run the following:
+
+    make start
+
+From your chrome://extensions/ page, load the `./build/dist` directory as an unpacked extension.
+
+## Publishing
+
+To create a release, decide whether your changes constitute a major, minor, or patch relase, and then run something like the following:
+
+    make minor release
+
+This updates the version numbers in the `package.json` and `src/manifest.json` files, creates a commit for the new version number, tags this commit, and creates the `extension.zip` archive.  You can then upload the `extension.zip` as a new release and push the commit & tag (`git push --tags origin master`).
+
 ##License
 
 [Apache 2](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
