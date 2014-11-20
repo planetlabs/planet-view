@@ -38,29 +38,7 @@ function ready(err, world, gallery) {
     player.new();
   });
 
-  d3.select('body').on('keydown', function() {
-    switch (d3.event.keyCode) {
-      case 37: // ←
-        player.previous();
-        break;
-      case 39: // →
-        player.next();
-        break;
-    }
-  });
-
-  chrome.commands.onCommand.addListener(function(command) {
-    switch (command) {
-      case 'show_previous':
-        player.previous();
-        break;
-      case 'show_next':
-        player.next();
-        break;
-    }
-  });
-
-  player.next();
+  player.new();
 }
 
 /**
@@ -239,10 +217,9 @@ function Player(entries, scene, globe) {
   this.entries = entries;
   this.scene = scene;
   this.globe = globe;
-  this.history = [];
-  this.index = -1;
   this.store = new Store();
   this.syncStore();
+  addEventListener('popstate', this.onPopState.bind(this), false);
 }
 
 /**
@@ -268,27 +245,33 @@ Player.prototype.syncStore = function() {
 };
 
 /**
+ * Handle popstate events.
+ * @param {PopStateEvent} event Fired with history changes.
+ */
+Player.prototype.onPopState = function(event) {
+  var id = event.state;
+  var scene = this.entries[id];
+  if (scene) {
+    this.show(scene);
+  }
+}
+
+/**
  * Show the next entry.
  */
 Player.prototype.next = function() {
-  if (!this.history[this.index + 1]) {
-    this.new();
-    return;
-  }
-  ++this.index;
-  this.show(this.history[this.index]);
+  history.forward();
 };
 
 /**
  * Show the previous entry.
  */
 Player.prototype.previous = function() {
-  this.index = Math.max(0, this.index - 1);
-  this.show(this.history[this.index]);
+  history.back();
 };
 
 /**
- * Show a new entry.  Truncate any "future" (or next) entries.
+ * Show a new entry.
  */
 Player.prototype.new = function() {
   var store = this.store;
@@ -311,11 +294,13 @@ Player.prototype.new = function() {
     candidates[Math.floor(Math.random() * candidates.length)]
   ];
 
-  ++this.index;
-  this.history[this.index] = entry;
-  this.history.length = this.index + 1;
   this.show(entry);
   this.store.set(entry.id, min + 1);
+  if (history.state) {
+    history.pushState(entry.id);
+  } else {
+    history.replaceState(entry.id);
+  }
 };
 
 /**
