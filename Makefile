@@ -1,5 +1,6 @@
 .DELETE_ON_ERROR:
-export PATH := ./node_modules/.bin:$(PATH)
+NODE_BIN := ./node_modules/.bin
+export PATH := $(NODE_BIN):$(PATH)
 
 BUILD_DIR := ./build
 SRC_DIR := ./src
@@ -25,7 +26,7 @@ $(ZIP): clean dist
 
 $(UPDATE): node_modules/.install
 	@source `git --exec-path`/git-sh-setup && require_clean_work_tree "bump version" "Please commit or stash them."
-	$(eval NEW_VERSION := $(shell semver --increment $@ `json -f package.json version`))
+	$(eval NEW_VERSION := $(shell $(NODE_BIN)/semver --increment $@ `$(NODE_BIN)/json -f package.json version`))
 	@json --in-place -f package.json -e "this.version='$(NEW_VERSION)'";
 	@json --in-place -f $(SRC_DIR)/manifest.json -e "this.version='$(NEW_VERSION)'";
 	@git add package.json $(SRC_DIR)/manifest.json
