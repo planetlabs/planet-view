@@ -3,7 +3,7 @@ var moment = require('moment');
 var queue = require('queue-async');
 var topojson = require('topojson');
 
-var galleryUrl = 'https://www.planet.com/gallery-atom.xml';
+var galleryUrl = 'https://www.planet.com/gallery.json';
 
 // navigation to other chrome pages
 d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
@@ -14,7 +14,7 @@ d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
 // trigger data loading
 queue()
     .defer(d3.json, 'assets/data/world-110m.json')
-    .defer(d3.xml, galleryUrl)
+    .defer(d3.json, galleryUrl)
     .await(ready);
 
 /**
@@ -28,57 +28,16 @@ function ready(err, world, gallery) {
     console.error(err);
     return;
   }
-  var entries = parse(gallery);
   var scene = new Scene('#scene');
   var globe = new Globe('#map', world);
 
-  var player = new Player(entries, scene, globe);
+  var player = new Player(gallery, scene, globe);
 
   d3.select('#map').on('click', function() {
     player.new();
   });
 
   player.new();
-}
-
-/**
- * Parse the gallery feed.
- * @param {Document} gallery Gallery feed.
- * @return {Object} Entries with id as key.
- */
-function parse(gallery) {
-  var entries = {};
-  d3.select(gallery).selectAll('entry').each(function() {
-    var entry = d3.select(this);
-
-    var title = entry.select('title').text();
-    var id = entry.select('id').text();
-    var updated = entry.select('updated').text();
-
-    var link = entry.select('link[rel="alternate"][type="text/html"]')
-        .attr('href');
-
-    var image = entry.select('link[rel="enclosure"][type="image/jpeg"]')
-        .attr('href');
-
-    var points = this.getElementsByTagNameNS('http://www.georss.org/georss',
-        'point');
-    if (points.length !== 1) {
-      console.log('Expected georss:point in entry', entry);
-      return;
-    }
-    var center = points[0].textContent.split(/\s*[,\s]\s*/).reverse();
-
-    entries[id] = {
-      title: title,
-      id: id,
-      link: link,
-      image: image,
-      center: center,
-      updated: updated
-    };
-  });
-  return entries;
 }
 
 /**
@@ -103,7 +62,8 @@ Scene.prototype.show = function(data) {
   image.src = data.image;
 
   // TODO: rework scene markup
-  var title = data.title + ' (' + moment(data.updated).calendar() + ')';
+  var title = data.title + ' (' + moment(data.acquisition_date).calendar()
+    + ')';
   d3.select('#image-title')
       .html('<a href="' + data.link + '">' + title + '</a>');
 };
@@ -202,7 +162,7 @@ Globe.prototype.show = function(point) {
     return function(t) {
       self.projection.rotate(rotate(t));
       self.render(circle);
-    }
+    };
   });
 };
 
@@ -254,7 +214,7 @@ Player.prototype.onPopState = function(event) {
   if (scene) {
     this.show(scene);
   }
-}
+};
 
 /**
  * Show the next entry.
@@ -309,7 +269,7 @@ Player.prototype.new = function() {
  */
 Player.prototype.show = function(entry) {
   this.scene.show(entry);
-  this.globe.show(entry.center);
+  this.globe.show([entry.lng, entry.lat]);
 };
 
 /**
