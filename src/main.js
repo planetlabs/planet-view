@@ -31,7 +31,16 @@ function ready(err, world, gallery) {
   var scene = new Scene('#scene');
   var globe = new Globe('#map', world);
 
-  var player = new Player(gallery, scene, globe);
+  var entries = {};
+  var entry;
+  for (var i = 0, ii = gallery.length; i < ii; ++i) {
+    entry = gallery[i];
+    // assume link is stable identifier
+    entry.id = entry.link;
+    entries[entry.id] = entry;
+  }
+
+  var player = new Player(entries, scene, globe);
 
   d3.select('#map').on('click', function() {
     player.new();
