@@ -24,7 +24,7 @@
     "autoprefixer": "^4.0.0",
     "browserify": "^6.3.2",
     "d3": "^3.4.13",
-    "jscs": "^1.7.3",
+    "jscs": "^1.8.1",
     "json": "^9.0.2",
     "less": "^2.0.0",
     "less-plugin-clean-css": "^1.2.0",
