@@ -64,11 +64,12 @@ function Scene(selector) {
  */
 Scene.prototype.show = function(data) {
   this.hide();
-  this.url = data.image;
+  var url = data.images.full || data.image;
+  this.url = url;
 
   var image = new Image();
-  image.onload = this._show.bind(this, data.image);
-  image.src = data.image;
+  image.onload = this._show.bind(this, url);
+  image.src = url;
 
   // TODO: rework scene markup
   var title = data.title + ' (' + moment(data.acquisition_date).calendar() +
