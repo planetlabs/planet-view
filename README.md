@@ -19,7 +19,7 @@ The development environemnt requires [Node](http://nodejs.org/) and [Make](http:
 
     make start
 
-From your chrome://extensions/ page, load the `./build/dist` directory as an unpacked extension.
+From your chrome://extensions/ page, load the `./build/dist` directory as an unpacked extension.  If you need to debug any of the sources, load the `./build/dev` directory as an unpacked extension instead.
 
 ## Publishing
 

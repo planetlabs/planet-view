@@ -32,6 +32,7 @@
     "queue-async": "^1.0.7",
     "semver": "^4.1.0",
     "topojson": "^1.6.18",
+    "uglify-js": "^2.4.15",
     "watchy": "0.5.4"
   }
 }

@@ -4,6 +4,7 @@ export PATH := $(NODE_BIN):$(PATH)
 
 BUILD_DIR := ./build
 SRC_DIR := ./src
+DEV_DIR := $(BUILD_DIR)/dev
 DIST_DIR := $(BUILD_DIR)/dist
 
 SRC_ALL_SCRIPT := $(shell find $(SRC_DIR) -name '*.js')
@@ -11,6 +12,10 @@ SRC_MAIN_SCRIPT := $(shell find $(SRC_DIR) -name 'main.js')
 SRC_ALL_STYLE := $(shell find $(SRC_DIR) -name '*.less')
 SRC_MAIN_STYLE := $(shell find $(SRC_DIR) -name 'main.less')
 SRC_ASSETS := $(shell find $(SRC_DIR) -name 'assets' -type d)
+
+DEV_MAIN_SCRIPT := $(patsubst $(SRC_DIR)/%,$(DEV_DIR)/%,$(SRC_MAIN_SCRIPT))
+DEV_MAIN_STYLE := $(patsubst $(SRC_DIR)/%.less,$(DEV_DIR)/%.css,$(SRC_MAIN_STYLE))
+DEV_ASSETS := $(patsubst $(SRC_DIR)/%,$(DEV_DIR)/%,$(SRC_ASSETS))
 
 DIST_MAIN_SCRIPT := $(patsubst $(SRC_DIR)/%,$(DIST_DIR)/%,$(SRC_MAIN_SCRIPT))
 DIST_MAIN_STYLE := $(patsubst $(SRC_DIR)/%.less,$(DIST_DIR)/%.css,$(SRC_MAIN_STYLE))
@@ -43,18 +48,42 @@ node_modules/.install: package.json
 	@npm dedupe
 	@touch $@
 
-.PHONY: dist
-dist: $(DIST_MAIN_SCRIPT) $(DIST_MAIN_STYLE) $(DIST_DIR)/index.html $(DIST_DIR)/manifest.json $(DIST_ASSETS)
+.PHONY: dev
+dev: $(DEV_MAIN_SCRIPT) $(DEV_MAIN_STYLE) $(DEV_DIR)/index.html $(DEV_DIR)/manifest.json $(DEV_ASSETS)
 
-$(DIST_MAIN_SCRIPT): $(SRC_ALL_SCRIPT) node_modules/.install
+$(DEV_MAIN_SCRIPT): $(SRC_ALL_SCRIPT) node_modules/.install
 	@mkdir -p $(dir $@)
-	@browserify --debug $(patsubst $(DIST_DIR)/%,$(SRC_DIR)/%,./$@) > $@
+	@browserify --debug $(patsubst $(DEV_DIR)/%,$(SRC_DIR)/%,./$@) > $@
 
-$(DIST_MAIN_STYLE): $(SRC_ALL_STYLE) node_modules/.install
+$(DEV_MAIN_STYLE): $(SRC_ALL_STYLE) node_modules/.install
 	@mkdir -p $(dir $@)
 	@lessc --source-map-less-inline --source-map-map-inline \
 			--source-map-rootpath=$(SRC_DIR) \
-			$(patsubst $(DIST_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | autoprefixer --browsers 'Chrome >= 35' --output $@
+			$(patsubst $(DEV_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | autoprefixer --browsers 'Chrome >= 35' --output $@
+
+$(DEV_DIR)/index.html: $(SRC_DIR)/index.html
+	@mkdir -p $(DEV_DIR)
+	@cp $< $@
+
+$(DEV_DIR)/manifest.json: $(SRC_DIR)/manifest.json
+	@mkdir -p $(DEV_DIR)
+	@cp $< $@
+
+.PHONY: $(DEV_ASSETS)
+$(DEV_ASSETS):
+	@mkdir -p $(dir $@)
+	@rsync --recursive --update --perms --executability $(patsubst $(DEV_DIR)/%,$(SRC_DIR)/%,./$@) $(dir $@)
+
+.PHONY: dist
+dist: $(DIST_MAIN_SCRIPT) $(DIST_MAIN_STYLE) $(DIST_DIR)/index.html $(DIST_DIR)/manifest.json $(DIST_ASSETS)
+
+$(DIST_DIR)/%.js: $(DEV_DIR)/%.js
+	@mkdir -p $(dir $@)
+	@uglifyjs $< > $@
+
+$(DIST_MAIN_STYLE): $(SRC_ALL_STYLE) node_modules/.install
+	@mkdir -p $(dir $@)
+	@lessc --clean-css $(patsubst $(DIST_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | autoprefixer --browsers 'Chrome >= 35' --output $@
 
 $(DIST_DIR)/index.html: $(SRC_DIR)/index.html
 	@mkdir -p $(DIST_DIR)
@@ -80,4 +109,4 @@ test: node_modules/.install
 
 .PHONY: start
 start: node_modules/.install
-	@watchy --watch package.json,src -- make test dist;
+	@watchy --watch package.json,src -- make test dev dist;
