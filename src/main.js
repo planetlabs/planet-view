@@ -50,6 +50,15 @@ function ready(err, world, gallery) {
 }
 
 /**
+ * Get the URL for a scene, favoring the full resolution version.
+ * @param {Object} scene Scene data.
+ * @return {string} Scene URL.
+ */
+function getUrl(scene) {
+  return scene.images.full || scene.image;
+}
+
+/**
  * Object for displaying a single image.
  * @param {string} selector Selector for target element containing the scene.
  * @constructor
@@ -61,14 +70,20 @@ function Scene(selector) {
 /**
  * Show a scene.
  * @param {Object} data Data for an individual scene.
+ * @param {Function} callback Called when the image loads.
  */
-Scene.prototype.show = function(data) {
+Scene.prototype.show = function(data, callback) {
   this.hide();
-  var url = data.images.full || data.image;
+  var url = getUrl(data);
   this.url = url;
 
   var image = new Image();
-  image.onload = this._show.bind(this, url);
+  image.onload = function() {
+    this._show(url);
+    if (callback) {
+      callback();
+    }
+  }.bind(this);
   image.src = url;
 
   // TODO: rework scene markup
@@ -208,7 +223,7 @@ Player.prototype.syncStore = function() {
     current[id] = true;
   }
   for (id in values) {
-    if (!current[id]) {
+    if (id.charAt(0) !== '_' && !current[id]) {
       store.remove(id);
     }
   }
@@ -244,8 +259,27 @@ Player.prototype.previous = function() {
  * Show a new entry.
  */
 Player.prototype.new = function() {
-  var store = this.store;
-  var views = store.values();
+  var entry = this.store.get('_next');
+  if (!entry) {
+    entry = this.getNext();
+  } else {
+    this.store.remove('_next');
+  }
+  this.store.set(entry.id, this.store.get(entry.id) + 1);
+  this.show(entry, true);
+  if (history.state) {
+    history.pushState(entry.id);
+  } else {
+    history.replaceState(entry.id);
+  }
+};
+
+/**
+ * Get the next (least frequently viewed) entry.
+ * @return {Object} Scene data.
+ */
+Player.prototype.getNext = function() {
+  var views = this.store.values();
   var hits = {};
   var min = Number.POSITIVE_INFINITY;
   for (var id in views) {
@@ -260,25 +294,33 @@ Player.prototype.new = function() {
     }
   }
   var candidates = hits[min];
-  var entry = this.entries[
+  return this.entries[
     candidates[Math.floor(Math.random() * candidates.length)]
   ];
+};
 
-  this.show(entry);
-  this.store.set(entry.id, min + 1);
-  if (history.state) {
-    history.pushState(entry.id);
-  } else {
-    history.replaceState(entry.id);
-  }
+/**
+ * Preload the next image.
+ */
+Player.prototype.preloadNext = function() {
+  var entry = this.getNext();
+  this.store.set('_next', entry);
+
+  var image = new Image();
+  image.src = getUrl(entry);
 };
 
 /**
  * Show the given entry.
  * @param {Object} entry Object with scene info.
+ * @param {boolean} isNew Newly viewed image.
  */
-Player.prototype.show = function(entry) {
-  this.scene.show(entry);
+Player.prototype.show = function(entry, isNew) {
+  if (isNew) {
+    this.scene.show(entry, this.preloadNext.bind(this));
+  } else {
+    this.scene.show(entry);
+  }
   this.globe.show([entry.lng, entry.lat]);
 };
 
