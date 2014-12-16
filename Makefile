@@ -8,6 +8,7 @@ DEV_DIR := $(BUILD_DIR)/dev
 DIST_DIR := $(BUILD_DIR)/dist
 
 SRC_ALL_SCRIPT := $(shell find $(SRC_DIR) -name '*.js')
+SRC_TEST_SCRIPT := $(shell find $(SRC_DIR) -name '*.test.js')
 SRC_MAIN_SCRIPT := $(shell find $(SRC_DIR) -name 'main.js')
 SRC_ALL_STYLE := $(shell find $(SRC_DIR) -name '*.less')
 SRC_MAIN_STYLE := $(shell find $(SRC_DIR) -name 'main.less')
@@ -102,10 +103,26 @@ $(DIST_ASSETS):
 clean:
 	@rm -rf $(BUILD_DIR)
 
-.PHONY: test
-test: node_modules/.install
+$(BUILD_DIR)/.js-lint: $(SRC_ALL_SCRIPT) .jscs.json node_modules/.install
 	@jscs $(SRC_DIR);
+	@mkdir -p $(BUILD_DIR)
+	@touch $@
+
+$(BUILD_DIR)/.css-lint: $(SRC_ALL_STYLE) node_modules/.install
 	@lessc --lint $(SRC_ALL_STYLE);
+	@mkdir -p $(BUILD_DIR)
+	@touch $@
+
+.PHONY: lint
+lint: $(BUILD_DIR)/.js-lint $(BUILD_DIR)/.css-lint
+
+$(BUILD_DIR)/.test: $(SRC_ALL_SCRIPT) node_modules/.install
+	@lab $(SRC_TEST_SCRIPT);
+	@mkdir -p $(BUILD_DIR)
+	@touch $@
+
+.PHONY: test
+test: lint $(BUILD_DIR)/.test
 
 .PHONY: start
 start: node_modules/.install

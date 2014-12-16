@@ -23,14 +23,18 @@
   "devDependencies": {
     "autoprefixer": "^4.0.0",
     "browserify": "^6.3.2",
+    "code": "^1.2.1",
     "d3": "^3.4.13",
+    "dom-storage": "^2.0.1",
     "jscs": "^1.8.1",
     "json": "^9.0.2",
+    "lab": "^5.1.0",
     "less": "^2.0.0",
     "less-plugin-clean-css": "^1.2.0",
     "moment": "^2.8.3",
     "queue-async": "^1.0.7",
     "semver": "^4.1.0",
+    "sinon": "^1.12.2",
     "topojson": "^1.6.18",
     "uglify-js": "^2.4.15",
     "watchy": "0.5.4"
