@@ -8,11 +8,6 @@ Installing is easy. Find the ["Planet View" extension](https://chrome.google.com
 
 [![installation](https://cloud.githubusercontent.com/assets/41094/5092854/d2eb189c-6f0f-11e4-9f1c-6b45ebbfa44e.gif)](https://chrome.google.com/webstore/detail/planet-view/hhhgdbldiopbpblfcohjaeinjjciplho)
 
-## Contribuitors
-
-* [Tim Schaub](https://github.com/tschaub)
-* [Jared Volpe](https://github.com/plainspace)
-
 ## Development
 
 The development environemnt requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `./build/dist` directory.  To build this directory and start a file watcher that rebuilds on all changes, run the following:
