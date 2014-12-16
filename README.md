@@ -22,7 +22,11 @@ To create a release, decide whether your changes constitute a major, minor, or p
 
     make minor release
 
-This updates the version numbers in the `package.json` and `src/manifest.json` files, creates a commit for the new version number, tags this commit, and creates the `extension.zip` archive.  You can then upload the `extension.zip` as a new release and push the commit & tag (`git push --tags origin master`).
+This updates the version numbers in the `package.json` and `src/manifest.json` files, creates a commit for the new version number, tags this commit, and creates the `extension.zip` archive.  Assuming everything looks right, push the version bump commit and the new tag:
+
+    git push --tags origin master
+
+Next, the `extension.zip` archive needs to be uploaded to the Chrome Web Store.  This requires a [developer account](https://chrome.google.com/webstore/developer/dashboard) that has been added to the Planet Labs publisher group.  Contact one of the current authors to be added to the group.  After uploading the newly created `extension.zip`, it can take up to an hour for the new version to be [published](https://chrome.google.com/webstore/detail/planet-view/hhhgdbldiopbpblfcohjaeinjjciplho).
 
 [![Current Status](https://secure.travis-ci.org/planetlabs/planet-view-chrome-ext.png?branch=master)](https://travis-ci.org/planetlabs/planet-view-chrome-ext)
 
