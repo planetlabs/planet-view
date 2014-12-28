@@ -10,7 +10,7 @@ Installing is easy. Find the ["Planet View" extension](https://chrome.google.com
 
 ## Development
 
-The development environemnt requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `./build/dist` directory.  To build this directory and start a file watcher that rebuilds on all changes, run the following:
+The development environment requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `./build/dist` directory.  To build this directory and start a file watcher that rebuilds on all changes, run the following:
 
     make start
 
@@ -18,7 +18,7 @@ From your chrome://extensions/ page, load the `./build/dist` directory as an unp
 
 ## Publishing
 
-To create a release, decide whether your changes constitute a major, minor, or patch relase, and then run something like the following:
+To create a release, decide whether your changes constitute a major, minor, or patch release, and then run something like the following:
 
     make minor release
 
