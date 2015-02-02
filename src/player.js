@@ -37,18 +37,6 @@ Player.prototype.new = function() {
   views[entry.id] += 1;
   this.store.set('views', views);
   this._show(entry, true);
-  if (history.state) {
-    history.pushState(entry.id);
-  } else {
-    history.replaceState(entry.id);
-  }
-};
-
-/**
- * Show the next entry.
- */
-Player.prototype.next = function() {
-  history.forward();
 };
 
 /**
