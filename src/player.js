@@ -13,6 +13,7 @@ function Player(entries, scene, globe) {
   this.globe = globe;
   this.store = new Store();
   this._syncStore();
+  this._first = true;
   addEventListener('popstate', this._onPopState.bind(this), false);
 }
 
@@ -37,10 +38,11 @@ Player.prototype.new = function() {
   views[entry.id] += 1;
   this.store.set('views', views);
   this._show(entry, true);
-  if (history.state) {
+  if (!this._first) {
     history.pushState(entry.id);
   } else {
     history.replaceState(entry.id);
+    this._first = false;
   }
 };
 
