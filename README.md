@@ -30,6 +30,6 @@ Next, the `extension.zip` archive needs to be uploaded to the Chrome Web Store. 
 
 [![Current Status](https://secure.travis-ci.org/planetlabs/planet-view-chrome-ext.png?branch=master)](https://travis-ci.org/planetlabs/planet-view-chrome-ext)
 
-##License
+## License
 
 [Apache 2](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
