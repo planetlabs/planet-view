@@ -39,9 +39,9 @@ Player.prototype.new = function() {
   this.store.set('views', views);
   this._show(entry, true);
   if (!this._first) {
-    history.pushState(entry.id);
+    history.pushState(entry.id, 'New Tab');
   } else {
-    history.replaceState(entry.id);
+    history.replaceState(entry.id, 'New Tab');
     this._first = false;
   }
 };

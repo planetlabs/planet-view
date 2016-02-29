@@ -60,7 +60,7 @@ $(DEV_MAIN_STYLE): $(SRC_ALL_STYLE) node_modules/.install
 	@mkdir -p $(dir $@)
 	@lessc --source-map-less-inline --source-map-map-inline \
 			--source-map-rootpath=$(SRC_DIR) \
-			$(patsubst $(DEV_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | autoprefixer --browsers 'Chrome >= 35' --output $@
+			$(patsubst $(DEV_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | postcss --use autoprefixer --autoprefixer.browsers 'Chrome >= 35' --output $@
 
 $(DEV_DIR)/index.html: $(SRC_DIR)/index.html
 	@mkdir -p $(DEV_DIR)
@@ -84,7 +84,7 @@ $(DIST_DIR)/%.js: $(DEV_DIR)/%.js
 
 $(DIST_MAIN_STYLE): $(SRC_ALL_STYLE) node_modules/.install
 	@mkdir -p $(dir $@)
-	@lessc --clean-css $(patsubst $(DIST_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | autoprefixer --browsers 'Chrome >= 35' --output $@
+	@lessc --clean-css $(patsubst $(DIST_DIR)/%.css,$(SRC_DIR)/%.less,./$@) | postcss --use autoprefixer --autoprefixer.browsers 'Chrome >= 35' --output $@
 
 $(DIST_DIR)/index.html: $(SRC_DIR)/index.html
 	@mkdir -p $(DIST_DIR)
@@ -103,8 +103,8 @@ $(DIST_ASSETS):
 clean:
 	@rm -rf $(BUILD_DIR)
 
-$(BUILD_DIR)/.js-lint: $(SRC_ALL_SCRIPT) .jscs.json node_modules/.install
-	@jscs $(SRC_DIR);
+$(BUILD_DIR)/.js-lint: $(SRC_ALL_SCRIPT) .eslintrc node_modules/.install
+	@eslint $(SRC_DIR);
 	@mkdir -p $(BUILD_DIR)
 	@touch $@
 

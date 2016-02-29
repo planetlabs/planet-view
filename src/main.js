@@ -25,19 +25,23 @@ queue()
  */
 function ready(err, world, gallery) {
   if (err) {
-    console.error(err);
-    return;
+    throw err;
   }
   var scene = new Scene('#scene');
   var globe = new Globe('#map', world);
 
   var entries = {};
   var entry;
+  var old = new Date();
+  old.setFullYear(old.getFullYear() - 1);
+
   for (var i = 0, ii = gallery.length; i < ii; ++i) {
     entry = gallery[i];
-    // assume link is stable identifier
-    entry.id = entry.link;
-    entries[entry.id] = entry;
+    if (new Date(entry.publish_date) > old) {
+      // assume link is stable identifier
+      entry.id = entry.link;
+      entries[entry.id] = entry;
+    }
   }
 
   var player = new Player(entries, scene, globe);
