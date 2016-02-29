@@ -25,8 +25,7 @@ queue()
  */
 function ready(err, world, gallery) {
   if (err) {
-    console.error(err);
-    return;
+    throw err;
   }
   var scene = new Scene('#scene');
   var globe = new Globe('#map', world);

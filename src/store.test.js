@@ -1,4 +1,3 @@
-var MockStorage = require('dom-storage');
 var lab = exports.lab = require('lab').script();
 var expect = require('code').expect;
 

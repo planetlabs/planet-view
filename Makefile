@@ -103,8 +103,8 @@ $(DIST_ASSETS):
 clean:
 	@rm -rf $(BUILD_DIR)
 
-$(BUILD_DIR)/.js-lint: $(SRC_ALL_SCRIPT) .jscs.json node_modules/.install
-	@jscs $(SRC_DIR);
+$(BUILD_DIR)/.js-lint: $(SRC_ALL_SCRIPT) .eslintrc node_modules/.install
+	@eslint $(SRC_DIR);
 	@mkdir -p $(BUILD_DIR)
 	@touch $@
 
