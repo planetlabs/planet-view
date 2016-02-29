@@ -32,11 +32,16 @@ function ready(err, world, gallery) {
 
   var entries = {};
   var entry;
+  var old = new Date();
+  old.setFullYear(old.getFullYear() - 1);
+
   for (var i = 0, ii = gallery.length; i < ii; ++i) {
     entry = gallery[i];
-    // assume link is stable identifier
-    entry.id = entry.link;
-    entries[entry.id] = entry;
+    if (new Date(entry.publish_date) > old) {
+      // assume link is stable identifier
+      entry.id = entry.link;
+      entries[entry.id] = entry;
+    }
   }
 
   var player = new Player(entries, scene, globe);
