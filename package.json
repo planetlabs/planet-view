@@ -6,12 +6,7 @@
     "type": "git",
     "url": "https://github.com/planetlabs/planet-view-chrome-ext.git"
   },
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
-  ],
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/planetlabs/planet-view-chrome-ext/issues"
   },
