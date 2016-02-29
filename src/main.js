@@ -50,5 +50,19 @@ function ready(err, world, gallery) {
     player.new();
   });
 
+  d3.select('body').on('keydown', function() {
+    switch (d3.event.keyCode) {
+      case 39:
+        player.next();
+        break;
+      case 37:
+        player.previous();
+        document.body.focus();
+        break;
+      default:
+        // pass
+    }
+  });
+
   player.new();
 }

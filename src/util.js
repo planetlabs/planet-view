@@ -1,14 +1,18 @@
 var MockStorage = require('dom-storage');
-var sinon = require('sinon');
+
+var localStorage;
 
 exports.addGlobals = function(done) {
+  localStorage = global.localStorage;
   global.localStorage = new MockStorage(null, {strict: true});
-  global.addEventListener = sinon.spy();
   done();
 };
 
-exports.removeGlobals = function(done) {
-  delete global.localStorage;
-  delete global.addEventListener;
+exports.restoreGlobals = function(done) {
+  if (localStorage) {
+    global.localStorage = localStorage;
+  } else {
+    delete global.localStorage;
+  }
   done();
 };

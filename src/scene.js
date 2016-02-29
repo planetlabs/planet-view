@@ -32,7 +32,7 @@ Scene.prototype.show = function(data, callback) {
   // TODO: rework scene markup
   var title = data.title + ' - ' + moment(data.acquisition_date).calendar();
   d3.select('#image-title')
-      .html('<a href="' + data.link + '">' + title + '</a>');
+      .html('<a tabindex="1" href="' + data.link + '">' + title + '</a>');
 };
 
 /**

@@ -1,10 +1,12 @@
 var Store = require('./store');
 
+var MAX_HISTORY = 50;
+
 /**
  * Shows entries and manages history.
  * @param {Object} entries Gallery entries.
- * @param {[type]} scene Scene view.
- * @param {[type]} globe Globe view.
+ * @param {Object} scene Scene view.
+ * @param {Object} globe Globe view.
  * @constructor
  */
 function Player(entries, scene, globe) {
@@ -14,14 +16,34 @@ function Player(entries, scene, globe) {
   this.store = new Store();
   this._syncStore();
   this._first = true;
-  addEventListener('popstate', this._onPopState.bind(this), false);
 }
 
 /**
  * Show the previous entry.
  */
 Player.prototype.previous = function() {
-  history.back();
+  var history = this.store.get('history');
+  var index = history.current + 1;
+  if (index < history.entries.length) {
+    this._show(history.entries[index]);
+    history.current = index;
+    this.store.set('history', history);
+  }
+};
+
+/**
+ * Show the next entry.
+ */
+Player.prototype.next = function() {
+  var history = this.store.get('history');
+  var index = history.current - 1;
+  if (index >= 0) {
+    this._show(history.entries[index]);
+    history.current = index;
+    this.store.set('history', history);
+  } else {
+    this.new();
+  }
 };
 
 /**
@@ -34,23 +56,18 @@ Player.prototype.new = function() {
   } else {
     this.store.remove('next');
   }
-  var views = this.store.get('views');
-  views[entry.id] += 1;
-  this.store.set('views', views);
   this._show(entry, true);
-  if (!this._first) {
-    history.pushState(entry.id, 'New Tab');
-  } else {
-    history.replaceState(entry.id, 'New Tab');
-    this._first = false;
+  var history = this.store.get('history');
+  var entries = history.entries;
+  entries.unshift(entry);
+  if (entries.length > MAX_HISTORY) {
+    entries.length = MAX_HISTORY;
   }
-};
-
-/**
- * Show the next entry.
- */
-Player.prototype.next = function() {
-  history.forward();
+  history = {
+    current: 0,
+    entries: entries
+  };
+  this.store.set('history', history);
 };
 
 /**
@@ -79,18 +96,6 @@ Player.prototype._getNext = function() {
 };
 
 /**
- * Handle popstate events.
- * @param {PopStateEvent} event Fired with history changes.
- */
-Player.prototype._onPopState = function(event) {
-  var id = event.state;
-  var scene = this.entries[id];
-  if (scene) {
-    this._show(scene);
-  }
-};
-
-/**
  * Preload the next image.
  */
 Player.prototype._preloadNext = function() {
@@ -112,12 +117,15 @@ Player.prototype._show = function(entry, isNew) {
   } else {
     this.scene.show(entry);
   }
+  var views = this.store.get('views');
+  views[entry.id] += 1;
+  this.store.set('views', views);
   this.globe.show([entry.lng, entry.lat]);
 };
 
 /**
  * Synchronize the views store.  This keeps track of the number of new views per
- * scene.
+ * scene and intializes history.
  */
 Player.prototype._syncStore = function() {
   var views = this.store.get('views') || {};
@@ -138,6 +146,13 @@ Player.prototype._syncStore = function() {
     current[id] = unviewed;
   }
   this.store.set('views', current);
+  if (!this.store.get('history')) {
+    var history = {
+      current: -1,
+      entries: []
+    };
+    this.store.set('history', history);
+  }
 };
 
 module.exports = Player;
