@@ -8,17 +8,17 @@ lab.experiment('Player', function() {
 
   lab.beforeEach(util.addGlobals);
 
-  lab.afterEach(util.removeGlobals);
+  lab.afterEach(util.restoreGlobals);
 
   lab.test('constructor', function(done) {
     var player = new Player();
     expect(player).to.be.an.instanceof(Player);
 
-    expect(global.addEventListener.calledOnce).to.be.true();
-    var call = global.addEventListener.getCall(0);
-    expect(call.args[0]).to.equal('popstate');
-
     expect(player.store.get('views')).to.deep.equal({});
+    expect(player.store.get('history')).to.deep.equal({
+      current: -1,
+      entries: []
+    });
     done();
   });
 

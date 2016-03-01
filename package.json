@@ -31,7 +31,6 @@
     "postcss-cli": "^2.5.1",
     "queue-async": "^1.2.1",
     "semver": "^5.1.0",
-    "sinon": "^1.17.3",
     "topojson": "^1.6.18",
     "uglify-js": "^2.6.2",
     "watchy": "0.6.6"

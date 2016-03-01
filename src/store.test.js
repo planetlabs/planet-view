@@ -8,7 +8,7 @@ lab.experiment('Store', function() {
 
   lab.beforeEach(util.addGlobals);
 
-  lab.afterEach(util.removeGlobals);
+  lab.afterEach(util.restoreGlobals);
 
   lab.test('constructor', function(done) {
     var store = new Store();
