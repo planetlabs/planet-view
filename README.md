@@ -1,6 +1,6 @@
 # Planet View
 
-Planet View displays a beautiful satellite image from Planet Labs every time you open a new tab.
+Planet View displays a beautiful satellite image from Planet every time you open a new tab.
 
 ## Getting started
 

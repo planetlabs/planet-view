@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Planet View",
-  "description": "Planet View displays a beautiful satellite image from Planet Labs every time you open a new tab.",
+  "description": "Planet View displays a beautiful satellite image from Planet every time you open a new tab.",
   "version": "2.1.0",
   "icons": {
     "16": "assets/images/icon-16.png",
