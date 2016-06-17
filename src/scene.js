@@ -31,8 +31,8 @@ Scene.prototype.show = function(data, callback) {
 
   // TODO: rework scene markup
   var title = data.title + ' - ' + moment(data.acquisition_date).calendar();
-  d3.select('#image-title')
-      .html('<a tabindex="1" href="' + data.link + '">' + title + '</a>');
+  d3.select('#image-title').html('<a tabindex="1" href="' + data.link + '">' + title + '</a>');
+  d3.select('#copyright-year').text(new Date(data.publish_date).getFullYear());
 };
 
 /**
