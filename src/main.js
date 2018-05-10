@@ -37,11 +37,9 @@ function ready(err, world, gallery) {
 
   for (var i = 0, ii = gallery.length; i < ii; ++i) {
     entry = gallery[i];
-    if (new Date(entry.publish_date) > old) {
-      // assume link is stable identifier
-      entry.id = entry.link;
-      entries[entry.id] = entry;
-    }
+    // assume link is stable identifier
+    entry.id = entry.link;
+    entries[entry.id] = entry;
   }
 
   var player = new Player(entries, scene, globe);
