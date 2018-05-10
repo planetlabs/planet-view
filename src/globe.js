@@ -10,19 +10,25 @@ var topojson = require('topojson');
 function Globe(selector, data) {
   var diameter = 80;
 
-  var projection = d3.geo.orthographic()
-      .scale((diameter / 2) - 2)
-      .translate([diameter / 2, diameter / 2])
-      .clipAngle(90);
+  var projection = d3.geo
+    .orthographic()
+    .scale(diameter / 2 - 2)
+    .translate([diameter / 2, diameter / 2])
+    .clipAngle(90);
 
-  var canvas = d3.select(selector).append('canvas')
-      .attr('width', diameter)
-      .attr('height', diameter);
+  var canvas = d3
+    .select(selector)
+    .append('canvas')
+    .attr('width', diameter)
+    .attr('height', diameter);
 
   var context = canvas.node().getContext('2d');
 
   this.context = context;
-  this.path = d3.geo.path().projection(projection).context(context);
+  this.path = d3.geo
+    .path()
+    .projection(projection)
+    .context(context);
   this.projection = projection;
 
   this.land = topojson.feature(data, data.objects.land);
@@ -64,16 +70,21 @@ Globe.prototype.render = function(circle) {
  * @param {Array.<number>} point Geographic location (lon, lat).
  */
 Globe.prototype.show = function(point) {
-  var circle = d3.geo.circle().origin(point).angle(6)();
-  var rotate = d3.interpolate(this.projection.rotate(),
-      [-point[0], -point[1]]);
+  var circle = d3.geo
+    .circle()
+    .origin(point)
+    .angle(6)();
+  var rotate = d3.interpolate(this.projection.rotate(), [-point[0], -point[1]]);
   var self = this;
-  d3.transition().duration(1250).tween('rotate', function() {
-    return function(t) {
-      self.projection.rotate(rotate(t));
-      self.render(circle);
-    };
-  });
+  d3
+    .transition()
+    .duration(1250)
+    .tween('rotate', function() {
+      return function(t) {
+        self.projection.rotate(rotate(t));
+        self.render(circle);
+      };
+    });
 };
 
 module.exports = Globe;

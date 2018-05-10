@@ -13,9 +13,9 @@ d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
 
 // trigger data loading
 queue()
-    .defer(d3.json, 'assets/data/world-110m.json')
-    .defer(d3.json, 'https://www.planet.com/gallery.json')
-    .await(ready);
+  .defer(d3.json, 'assets/data/world-110m.json')
+  .defer(d3.json, 'https://www.planet.com/gallery.json')
+  .await(ready);
 
 /**
  * Handle loaded data.
@@ -58,7 +58,7 @@ function ready(err, world, gallery) {
         document.body.focus();
         break;
       default:
-        // pass
+      // pass
     }
   });
 

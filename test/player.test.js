@@ -1,11 +1,9 @@
-var lab = exports.lab = require('lab').script();
+var lab = (exports.lab = require('lab').script());
 var expect = require('code').expect;
-
-var Player = require('./player');
-var util = require('./util');
+var Player = require('../src/player');
+var util = require('../src/util');
 
 lab.experiment('Player', function() {
-
   lab.beforeEach(util.addGlobals);
 
   lab.afterEach(util.restoreGlobals);
@@ -94,5 +92,4 @@ lab.experiment('Player', function() {
 
     done();
   });
-
 });
