@@ -31,7 +31,9 @@ Scene.prototype.show = function(data, callback) {
 
   // TODO: rework scene markup
   var title = data.title + ' - ' + moment(data.acquisition_date).calendar();
-  d3.select('#image-title').html('<a tabindex="1" href="' + data.link + '">' + title + '</a>');
+  d3
+    .select('#image-title')
+    .html('<a tabindex="1" href="' + data.link + '">' + title + '</a>');
   d3.select('#copyright-year').text(new Date(data.publish_date).getFullYear());
 };
 
@@ -40,7 +42,7 @@ Scene.prototype.show = function(data, callback) {
  * @param {string} url The url of the loaded image.
  */
 Scene.prototype._show = function(url) {
-  if (url != this.url) {
+  if (url !== this.url) {
     // another image is loading
     return;
   }
@@ -57,7 +59,7 @@ Scene.prototype._show = function(url) {
  */
 Scene.prototype.getUrl = function(data) {
   return data.images.full || data.image;
-}
+};
 
 /**
  * Hide a scene.

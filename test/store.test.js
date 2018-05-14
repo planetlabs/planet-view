@@ -1,11 +1,9 @@
-var lab = exports.lab = require('lab').script();
+var lab = (exports.lab = require('lab').script());
 var expect = require('code').expect;
-
-var Store = require('./store');
-var util = require('./util');
+var Store = require('../src/store');
+var util = require('../src/util');
 
 lab.experiment('Store', function() {
-
   lab.beforeEach(util.addGlobals);
 
   lab.afterEach(util.restoreGlobals);
@@ -42,5 +40,4 @@ lab.experiment('Store', function() {
     expect(store.get('foo')).to.be.undefined();
     done();
   });
-
 });

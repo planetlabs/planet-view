@@ -8,7 +8,6 @@ DEV_DIR := $(BUILD_DIR)/dev
 DIST_DIR := $(BUILD_DIR)/dist
 
 SRC_ALL_SCRIPT := $(shell find $(SRC_DIR) -name '*.js')
-SRC_TEST_SCRIPT := $(shell find $(SRC_DIR) -name '*.test.js')
 SRC_MAIN_SCRIPT := $(shell find $(SRC_DIR) -name 'main.js')
 SRC_ALL_STYLE := $(shell find $(SRC_DIR) -name '*.less')
 SRC_MAIN_STYLE := $(shell find $(SRC_DIR) -name 'main.less')
@@ -115,14 +114,6 @@ $(BUILD_DIR)/.css-lint: $(SRC_ALL_STYLE) node_modules/.install
 
 .PHONY: lint
 lint: $(BUILD_DIR)/.js-lint $(BUILD_DIR)/.css-lint
-
-$(BUILD_DIR)/.test: $(SRC_ALL_SCRIPT) node_modules/.install
-	@lab $(SRC_TEST_SCRIPT);
-	@mkdir -p $(BUILD_DIR)
-	@touch $@
-
-.PHONY: test
-test: lint $(BUILD_DIR)/.test
 
 .PHONY: start
 start: node_modules/.install
