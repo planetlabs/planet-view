@@ -58,7 +58,7 @@ Scene.prototype._show = function(url) {
  * @return {string} Scene URL.
  */
 Scene.prototype.getUrl = function(data) {
-  return data.images.full || data.image;
+  return data.images.web || data.images.full || data.image;
 };
 
 /**

@@ -10,9 +10,9 @@ Installing is easy. Find the ["Planet View" extension](https://chrome.google.com
 
 ## Development
 
-The development environment requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `./build/dist` directory.  To build this directory and start a file watcher that rebuilds on all changes, run the following:
+The development environment requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `build` directory.  To build this directory run the following:
 
-    make start
+    make dev dist
 
 From your chrome://extensions/ page, load the `./build/dist` directory as an unpacked extension.  If you need to debug any of the sources, load the `./build/dev` directory as an unpacked extension instead.
 
