@@ -13,8 +13,7 @@
   "homepage": "https://github.com/planetlabs/planet-view-chrome-ext",
   "scripts": {
     "pretest": "eslint src",
-    "test": "lab test --globals SharedArrayBuffer,Atomics,WebAssembly,URL,URLSearchParams",
-    "start": "make start"
+    "test": "lab test --globals SharedArrayBuffer,Atomics,WebAssembly,URL,URLSearchParams"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",
@@ -33,8 +32,7 @@
     "queue-async": "^1.2.1",
     "semver": "^5.1.0",
     "topojson": "^1.6.18",
-    "uglify-js": "^2.6.2",
-    "watchy": "0.6.6"
+    "uglify-js": "^2.6.2"
   },
   "eslintConfig": {
     "extends": "planet"

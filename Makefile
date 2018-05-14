@@ -117,4 +117,4 @@ lint: $(BUILD_DIR)/.js-lint $(BUILD_DIR)/.css-lint
 
 .PHONY: start
 start: node_modules/.install
-	@watchy --watch package.json,src -- make test dev dist;
+	@watchy --watch package.json,src -- make dev dist;
