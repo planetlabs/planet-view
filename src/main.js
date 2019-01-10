@@ -14,7 +14,7 @@ d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
 // trigger data loading
 queue()
   .defer(d3.json, 'assets/data/world-110m.json')
-  .defer(d3.json, 'https://www.planet.com/gallery.json')
+  .defer(d3.json, 'https://api.planet.com/gallery/v1/posts')
   .await(ready);
 
 /**
