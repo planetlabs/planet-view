@@ -120,7 +120,7 @@ Player.prototype._show = function(entry, isNew) {
   var views = this.store.get('views');
   views[entry.id] += 1;
   this.store.set('views', views);
-  this.globe.show([entry.lng, entry.lat]);
+  this.globe.show(entry.coordinates);
 };
 
 /**
