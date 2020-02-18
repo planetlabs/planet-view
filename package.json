@@ -13,7 +13,7 @@
   "homepage": "https://github.com/planetlabs/planet-view-chrome-ext",
   "scripts": {
     "pretest": "eslint src",
-    "test": "lab test --globals SharedArrayBuffer,Atomics,WebAssembly,URL,URLSearchParams"
+    "test": "lab test --ignore BigUint64Array,BigInt64Array,BigInt,SharedArrayBuffer,Atomics,WebAssembly,URL,URLSearchParams,TextEncoder,TextDecoder,queueMicrotask"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",

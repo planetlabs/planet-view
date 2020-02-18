@@ -31,14 +31,18 @@ function ready(err, world, gallery) {
   var globe = new Globe('#map', world);
 
   var entries = {};
-  var entry;
-  var old = new Date();
-  old.setFullYear(old.getFullYear() - 1);
+
+  gallery
+    .sort(function(a, b) {
+      return new Date(a.date) > new Date(b.date) ? -1 : 1;
+    })
+    .filter(function(entry) {
+      return entry.type === 'single';
+    })
+    .slice(0, 50);
 
   for (var i = 0, ii = gallery.length; i < ii; ++i) {
-    entry = gallery[i];
-    // assume link is stable identifier
-    entry.id = entry.link;
+    var entry = gallery[i];
     entries[entry.id] = entry;
   }
 
