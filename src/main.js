@@ -14,7 +14,7 @@ d3.selectAll('a[data-hook="chrome-link"]').on('click', function() {
 // trigger data loading
 queue()
   .defer(d3.json, 'assets/data/world-110m.json')
-  .defer(d3.json, 'https://www.planet.com/gallery.json')
+  .defer(d3.json, 'https://api.planet.com/gallery/v1/posts')
   .await(ready);
 
 /**
@@ -31,14 +31,18 @@ function ready(err, world, gallery) {
   var globe = new Globe('#map', world);
 
   var entries = {};
-  var entry;
-  var old = new Date();
-  old.setFullYear(old.getFullYear() - 1);
+
+  gallery
+    .sort(function(a, b) {
+      return new Date(a.date) > new Date(b.date) ? -1 : 1;
+    })
+    .filter(function(entry) {
+      return entry.type === 'single';
+    })
+    .slice(0, 50);
 
   for (var i = 0, ii = gallery.length; i < ii; ++i) {
-    entry = gallery[i];
-    // assume link is stable identifier
-    entry.id = entry.link;
+    var entry = gallery[i];
     entries[entry.id] = entry;
   }
 
