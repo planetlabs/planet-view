@@ -17,6 +17,9 @@ queue()
   .defer(d3.json, 'https://api.planet.com/gallery/v1/posts')
   .await(ready);
 
+const internalURL = /gallery\.prod\.planet-labs\.com\/gallery\/v1\/posts\/(.*)$/;
+const externalURL = 'https://www.planet.com/gallery/#!/post';
+
 /**
  * Handle loaded data.
  * @param {Error} err Network error.
@@ -39,12 +42,16 @@ function ready(err, world, gallery) {
     .filter(function(entry) {
       return entry.type === 'single';
     })
-    .slice(0, 50);
+    .slice(0, 50)
+    .forEach(function(entry) {
+      // workaround for Gallery API using internal URLs
+      const match = internalURL.exec(entry.link);
+      if (match) {
+        entry.link = externalURL + '/' + match[1]; // eslint-disable-line
+      }
 
-  for (var i = 0, ii = gallery.length; i < ii; ++i) {
-    var entry = gallery[i];
-    entries[entry.id] = entry;
-  }
+      entries[entry.id] = entry;
+    });
 
   var player = new Player(entries, scene, globe);
 
