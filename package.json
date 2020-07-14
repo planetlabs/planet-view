@@ -1,5 +1,6 @@
 {
-  "name": "planet-view-chrome-ext",
+  "name": "planet-view",
+  "private": true,
   "version": "2.5.0",
   "description": "Chrome extension displaying Planet imagery",
   "repository": {
@@ -12,27 +13,25 @@
   },
   "homepage": "https://github.com/planetlabs/planet-view-chrome-ext",
   "scripts": {
-    "pretest": "eslint src",
-    "test": "lab test --ignore BigUint64Array,BigInt64Array,BigInt,SharedArrayBuffer,Atomics,WebAssembly,URL,URLSearchParams,TextEncoder,TextDecoder,queueMicrotask"
+    "start": "parcel serve ./src/index.html",
+    "build": "parcel build ./src/index.html",
+    "postbuild": "mkdir -p dist/assets && cp src/manifest.json dist/manifest.json && cp -r src/assets/images dist/assets",
+    "lint": "eslint src",
+    "pretest": "npm run lint",
+    "test": "jest"
   },
   "devDependencies": {
-    "autoprefixer": "^6.3.3",
-    "browserify": "^13.0.0",
-    "code": "^2.1.0",
     "d3": "^3.5.16",
     "dom-storage": "^2.0.2",
-    "eslint": "^4.19.1",
-    "eslint-config-planet": "^16.0.0",
+    "eslint": "^7.4.0",
+    "eslint-config-planet": "^18.1.2",
+    "jest": "^26.1.0",
     "json": "^9.0.3",
-    "lab": "^10.1.0",
-    "less": "^2.6.0",
-    "less-plugin-clean-css": "^1.2.0",
     "moment": "^2.11.2",
-    "postcss-cli": "^2.5.1",
+    "parcel": "^2.0.0-beta.1",
     "queue-async": "^1.2.1",
     "semver": "^5.1.0",
-    "topojson": "^1.6.18",
-    "uglify-js": "^2.6.2"
+    "topojson": "^1.6.18"
   },
   "eslintConfig": {
     "extends": "planet"

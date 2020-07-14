@@ -1,13 +1,13 @@
-var d3 = require('d3');
-var queue = require('queue-async');
+const d3 = require('d3');
+const queue = require('queue-async');
 
-var Globe = require('./globe');
-var Player = require('./player');
-var Scene = require('./scene');
+const Globe = require('./globe');
+const Player = require('./player');
+const Scene = require('./scene');
+const world = require('./assets/data/world-110m.json');
 
 // trigger data loading
 queue()
-  .defer(d3.json, 'assets/data/world-110m.json')
   .defer(d3.json, 'https://api.planet.com/gallery/v1/posts')
   .await(ready);
 
@@ -20,14 +20,14 @@ const externalURL = 'https://www.planet.com/gallery/#!/post';
  * @param {Object} world Land and country data.
  * @param {Document} gallery Gallery feed.
  */
-function ready(err, world, gallery) {
+function ready(err, gallery) {
   if (err) {
     throw err;
   }
-  var scene = new Scene('#scene');
-  var globe = new Globe('#map', world);
+  const scene = new Scene('#scene');
+  const globe = new Globe('#map', world);
 
-  var entries = {};
+  const entries = {};
 
   gallery
     .sort(function(a, b) {
@@ -47,7 +47,7 @@ function ready(err, world, gallery) {
       entries[entry.id] = entry;
     });
 
-  var player = new Player(entries, scene, globe);
+  const player = new Player(entries, scene, globe);
 
   d3.select('#map').on('click', function() {
     player.new();

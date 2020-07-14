@@ -1,5 +1,5 @@
-var d3 = require('d3');
-var moment = require('moment');
+const d3 = require('d3');
+const moment = require('moment');
 
 /**
  * Object for displaying a single image.
@@ -17,10 +17,10 @@ function Scene(selector) {
  */
 Scene.prototype.show = function(data, callback) {
   this.hide();
-  var url = this.getUrl(data);
+  const url = this.getUrl(data);
   this.url = url;
 
-  var image = new Image();
+  const image = new Image();
   image.onload = function() {
     this._show(url);
     if (callback) {
@@ -30,10 +30,10 @@ Scene.prototype.show = function(data, callback) {
   image.src = url;
 
   // TODO: rework scene markup
-  var title = data.title + ' - ' + moment(data.images[0].date).calendar();
-  d3
-    .select('#image-title')
-    .html('<a tabindex="1" href="' + data.link + '">' + title + '</a>');
+  const title = data.title + ' - ' + moment(data.images[0].date).calendar();
+  d3.select('#image-title').html(
+    '<a tabindex="1" href="' + data.link + '">' + title + '</a>'
+  );
   d3.select('#copyright-year').text(new Date(data.date).getFullYear());
 };
 
@@ -47,7 +47,7 @@ Scene.prototype._show = function(url) {
     return;
   }
   this.target.style({
-    'background-image': 'url(' + url + ')'
+    'background-image': 'url(' + url + ')',
   });
   this.target.classed('shown', true);
 };

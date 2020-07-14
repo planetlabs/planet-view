@@ -1,6 +1,6 @@
-var Store = require('./store');
+const Store = require('./store');
 
-var MAX_HISTORY = 50;
+const MAX_HISTORY = 50;
 
 /**
  * Shows entries and manages history.
@@ -22,8 +22,8 @@ function Player(entries, scene, globe) {
  * Show the previous entry.
  */
 Player.prototype.previous = function() {
-  var history = this.store.get('history');
-  var index = history.current + 1;
+  const history = this.store.get('history');
+  const index = history.current + 1;
   if (index < history.entries.length) {
     this._show(history.entries[index]);
     history.current = index;
@@ -35,8 +35,8 @@ Player.prototype.previous = function() {
  * Show the next entry.
  */
 Player.prototype.next = function() {
-  var history = this.store.get('history');
-  var index = history.current - 1;
+  const history = this.store.get('history');
+  const index = history.current - 1;
   if (index >= 0) {
     this._show(history.entries[index]);
     history.current = index;
@@ -50,22 +50,22 @@ Player.prototype.next = function() {
  * Show a new entry.
  */
 Player.prototype.new = function() {
-  var entry = this.store.get('next');
+  let entry = this.store.get('next');
   if (!entry) {
     entry = this._getNext();
   } else {
     this.store.remove('next');
   }
   this._show(entry, true);
-  var history = this.store.get('history');
-  var entries = history.entries;
+  let history = this.store.get('history');
+  const entries = history.entries;
   entries.unshift(entry);
   if (entries.length > MAX_HISTORY) {
     entries.length = MAX_HISTORY;
   }
   history = {
     current: 0,
-    entries: entries
+    entries: entries,
   };
   this.store.set('history', history);
 };
@@ -75,11 +75,11 @@ Player.prototype.new = function() {
  * @return {Object} Scene data.
  */
 Player.prototype._getNext = function() {
-  var views = this.store.get('views');
-  var hits = {};
-  var min = Number.POSITIVE_INFINITY;
-  for (var id in views) {
-    var count = views[id];
+  const views = this.store.get('views');
+  const hits = {};
+  let min = Number.POSITIVE_INFINITY;
+  for (const id in views) {
+    const count = views[id];
     if (count in hits) {
       hits[count].push(id);
     } else {
@@ -89,7 +89,7 @@ Player.prototype._getNext = function() {
       min = count;
     }
   }
-  var candidates = hits[min];
+  const candidates = hits[min];
   return this.entries[
     candidates[Math.floor(Math.random() * candidates.length)]
   ];
@@ -99,10 +99,10 @@ Player.prototype._getNext = function() {
  * Preload the next image.
  */
 Player.prototype._preloadNext = function() {
-  var entry = this._getNext();
+  const entry = this._getNext();
   this.store.set('next', entry);
 
-  var image = new Image();
+  const image = new Image();
   image.src = this.scene.getUrl(entry);
 };
 
@@ -117,7 +117,7 @@ Player.prototype._show = function(entry, isNew) {
   } else {
     this.scene.show(entry);
   }
-  var views = this.store.get('views');
+  const views = this.store.get('views');
   views[entry.id] += 1;
   this.store.set('views', views);
   this.globe.show(entry.coordinates);
@@ -128,11 +128,11 @@ Player.prototype._show = function(entry, isNew) {
  * scene and intializes history.
  */
 Player.prototype._syncStore = function() {
-  var views = this.store.get('views') || {};
-  var added = {};
-  var current = {};
-  var minViews = NaN;
-  var id;
+  const views = this.store.get('views') || {};
+  const added = {};
+  const current = {};
+  let minViews = NaN;
+  let id;
   for (id in this.entries) {
     if (id in views) {
       minViews = isNaN(minViews) ? views[id] : Math.min(minViews, views[id]);
@@ -141,15 +141,15 @@ Player.prototype._syncStore = function() {
       added[id] = true;
     }
   }
-  var unviewed = isNaN(minViews) ? 0 : Math.max(0, minViews - 1);
+  const unviewed = isNaN(minViews) ? 0 : Math.max(0, minViews - 1);
   for (id in added) {
     current[id] = unviewed;
   }
   this.store.set('views', current);
   if (!this.store.get('history')) {
-    var history = {
+    const history = {
       current: -1,
-      entries: []
+      entries: [],
     };
     this.store.set('history', history);
   }

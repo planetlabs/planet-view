@@ -10,11 +10,17 @@ Installing is easy. Find the ["Planet View" extension](https://chrome.google.com
 
 ## Development
 
-The development environment requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `build` directory.  To build this directory run the following:
+The development environment requires [Node](http://nodejs.org/).  To serve a development version of the extension, run the following:
 
-    make dev dist
+    npm start
 
-From your chrome://extensions/ page, load the `./build/dist` directory as an unpacked extension.  If you need to debug any of the sources, load the `./build/dev` directory as an unpacked extension instead.
+To test a built version of the extension, first run the build script:
+
+    npm run build
+
+From testing in Chrome, open [the extensions page](chrome://extensions/), and load the `./dist` directory as an unpacked extension.
+
+For testing in Firefox, open [the debuggong page](about:debugging#/runtime/this-firefox), and under "This Firefox", click "Load Temporary Add-on..." and select the `./dist/manifest.json` file.
 
 ## Publishing
 
@@ -28,7 +34,7 @@ This updates the version numbers in the `package.json` and `src/manifest.json` f
 
 Next, the `extension.zip` archive needs to be uploaded to the Chrome Web Store.  This requires a [developer account](https://chrome.google.com/webstore/developer/dashboard) that has been added to the Planet Labs publisher group.  Contact one of the current authors to be added to the group.  After uploading the newly created `extension.zip`, it can take up to an hour for the new version to be [published](https://chrome.google.com/webstore/detail/planet-view/hhhgdbldiopbpblfcohjaeinjjciplho).
 
-[![Current Status](https://secure.travis-ci.org/planetlabs/planet-view-chrome-ext.png?branch=master)](https://travis-ci.org/planetlabs/planet-view-chrome-ext)
+![Current Status](https://github.com/planetlabs/planet-view/workflows/Test/badge.svg)
 
 ## License
 

@@ -1,6 +1,6 @@
-var MockStorage = require('dom-storage');
+const MockStorage = require('dom-storage');
 
-var localStorage;
+let localStorage;
 
 exports.addGlobals = function(done) {
   localStorage = global.localStorage;

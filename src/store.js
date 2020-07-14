@@ -2,13 +2,13 @@
  * Store count.
  * @type {number}
  */
-var count = 0;
+let count = 0;
 
 /**
  * Store prefix.
  * @type {string}
  */
-var prefix = 'planet-view-1';
+const prefix = 'planet-view-1';
 
 /**
  * Get a unique id for this session.
@@ -45,7 +45,7 @@ Store.prototype.get = function(key) {
  * @param {string} key The key.
  */
 Store.prototype.remove = function(key) {
-  var values = this._getValues();
+  const values = this._getValues();
   delete values[key];
   this._setValues(values);
 };
@@ -56,7 +56,7 @@ Store.prototype.remove = function(key) {
  * @param {*} value The value.
  */
 Store.prototype.set = function(key, value) {
-  var values = this._getValues();
+  const values = this._getValues();
   values[key] = value;
   this._setValues(values);
 };
