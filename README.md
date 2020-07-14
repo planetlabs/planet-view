@@ -34,7 +34,7 @@ This updates the version numbers in the `package.json` and `src/manifest.json` f
 
 Next, the `extension.zip` archive needs to be uploaded to the Chrome Web Store.  This requires a [developer account](https://chrome.google.com/webstore/developer/dashboard) that has been added to the Planet Labs publisher group.  Contact one of the current authors to be added to the group.  After uploading the newly created `extension.zip`, it can take up to an hour for the new version to be [published](https://chrome.google.com/webstore/detail/planet-view/hhhgdbldiopbpblfcohjaeinjjciplho).
 
-[![Current Status](https://secure.travis-ci.org/planetlabs/planet-view-chrome-ext.png?branch=master)](https://travis-ci.org/planetlabs/planet-view-chrome-ext)
+![Current Status](https://github.com/planetlabs/planet-view/workflows/Test/badge.svg)
 
 ## License
 
