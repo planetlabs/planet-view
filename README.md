@@ -10,11 +10,17 @@ Installing is easy. Find the ["Planet View" extension](https://chrome.google.com
 
 ## Development
 
-The development environment requires [Node](http://nodejs.org/) and [Make](http://www.gnu.org/software/make/).  During development, the extension resources will be built in the `build` directory.  To build this directory run the following:
+The development environment requires [Node](http://nodejs.org/).  To serve a development version of the extension, run the following:
 
-    make dev dist
+    npm start
 
-From your chrome://extensions/ page, load the `./build/dist` directory as an unpacked extension.  If you need to debug any of the sources, load the `./build/dev` directory as an unpacked extension instead.
+To test a built version of the extension, first run the build script:
+
+    npm run build
+
+From testing in Chrome, open [the extensions page](chrome://extensions/), and load the `./dist` directory as an unpacked extension.
+
+For testing in Firefox, open [the debuggong page](about:debugging#/runtime/this-firefox), and under "This Firefox", click "Load Temporary Add-on..." and select the `./dist/manifest.json` file.
 
 ## Publishing
 

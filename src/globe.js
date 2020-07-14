@@ -1,5 +1,5 @@
-var d3 = require('d3');
-var topojson = require('topojson');
+const d3 = require('d3');
+const topojson = require('topojson');
 
 /**
  * Rendering of a globe.
@@ -8,21 +8,21 @@ var topojson = require('topojson');
  * @constructor
  */
 function Globe(selector, data) {
-  var diameter = 80;
+  const diameter = 80;
 
-  var projection = d3.geo
+  const projection = d3.geo
     .orthographic()
     .scale(diameter / 2 - 2)
     .translate([diameter / 2, diameter / 2])
     .clipAngle(90);
 
-  var canvas = d3
+  const canvas = d3
     .select(selector)
     .append('canvas')
     .attr('width', diameter)
     .attr('height', diameter);
 
-  var context = canvas.node().getContext('2d');
+  const context = canvas.node().getContext('2d');
 
   this.context = context;
   this.path = d3.geo
@@ -40,8 +40,8 @@ function Globe(selector, data) {
  * @param {Object} circle Data for the optional locator circle.
  */
 Globe.prototype.render = function(circle) {
-  var context = this.context;
-  var diameter = context.canvas.width;
+  const context = this.context;
+  const diameter = context.canvas.width;
 
   context.clearRect(0, 0, diameter, diameter);
 
@@ -70,14 +70,16 @@ Globe.prototype.render = function(circle) {
  * @param {Array.<number>} point Geographic location (lon, lat).
  */
 Globe.prototype.show = function(point) {
-  var circle = d3.geo
+  const circle = d3.geo
     .circle()
     .origin(point)
     .angle(6)();
-  var rotate = d3.interpolate(this.projection.rotate(), [-point[0], -point[1]]);
-  var self = this;
-  d3
-    .transition()
+  const rotate = d3.interpolate(this.projection.rotate(), [
+    -point[0],
+    -point[1],
+  ]);
+  const self = this;
+  d3.transition()
     .duration(1250)
     .tween('rotate', function() {
       return function(t) {
