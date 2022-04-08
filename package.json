@@ -27,7 +27,7 @@
     "eslint-config-planet": "^18.1.2",
     "jest": "^26.1.0",
     "json": "^10.0.0",
-    "moment": "^2.11.2",
+    "moment": "^2.29.2",
     "parcel": "^2.0.0-beta.1",
     "queue-async": "^1.2.1",
     "semver": "^5.1.0",
