@@ -36,7 +36,7 @@ function Store() {
  * @param {string} key The key.
  * @return {*} The value.
  */
-Store.prototype.get = function(key) {
+Store.prototype.get = function (key) {
   return this._getValues()[key];
 };
 
@@ -44,7 +44,7 @@ Store.prototype.get = function(key) {
  * Remove a key.
  * @param {string} key The key.
  */
-Store.prototype.remove = function(key) {
+Store.prototype.remove = function (key) {
   const values = this._getValues();
   delete values[key];
   this._setValues(values);
@@ -55,7 +55,7 @@ Store.prototype.remove = function(key) {
  * @param {string} key The key.
  * @param {*} value The value.
  */
-Store.prototype.set = function(key, value) {
+Store.prototype.set = function (key, value) {
   const values = this._getValues();
   values[key] = value;
   this._setValues(values);
@@ -65,7 +65,7 @@ Store.prototype.set = function(key, value) {
  * Get all values.
  * @return {Object} Store values.
  */
-Store.prototype._getValues = function() {
+Store.prototype._getValues = function () {
   return JSON.parse(localStorage[this.id]);
 };
 
@@ -73,8 +73,8 @@ Store.prototype._getValues = function() {
  * Set all values.
  * @param {Object} values Store values.
  */
-Store.prototype._setValues = function(values) {
+Store.prototype._setValues = function (values) {
   localStorage[this.id] = JSON.stringify(values);
 };
 
-module.exports = Store;
+export default Store;

@@ -1,43 +1,40 @@
-const d3 = require('d3');
-const queue = require('queue-async');
+import * as d3 from 'd3';
+import Globe from './Globe.js';
+import Player from './Player.js';
+import Scene from './Scene.js';
+import world from './assets/data/world-110m.json';
 
-const Globe = require('./globe');
-const Player = require('./player');
-const Scene = require('./scene');
-const world = require('./assets/data/world-110m.json');
+const internalURL =
+  /gallery\.prod\.planet-labs\.com\/gallery\/v1\/posts\/(.*)$/;
+const externalURL = 'https://www.planet.com/gallery/#!/post';
+const postsURL = 'https://api.planet.com/gallery/v1/posts';
 
 // trigger data loading
-queue()
-  .defer(d3.json, 'https://api.planet.com/gallery/v1/posts')
-  .await(ready);
-
-const internalURL = /gallery\.prod\.planet-labs\.com\/gallery\/v1\/posts\/(.*)$/;
-const externalURL = 'https://www.planet.com/gallery/#!/post';
+fetch(postsURL)
+  .then(response => response.json())
+  .then(ready)
+  .catch(err => console.error(err)); // eslint-disable-line
 
 /**
  * Handle loaded data.
- * @param {Error} err Network error.
  * @param {Object} world Land and country data.
  * @param {Document} gallery Gallery feed.
  */
-function ready(err, gallery) {
-  if (err) {
-    throw err;
-  }
+function ready(gallery) {
   const scene = new Scene('#scene');
   const globe = new Globe('#map', world);
 
   const entries = {};
 
   gallery
-    .sort(function(a, b) {
+    .sort(function (a, b) {
       return new Date(a.date) > new Date(b.date) ? -1 : 1;
     })
-    .filter(function(entry) {
+    .filter(function (entry) {
       return entry.type === 'single';
     })
     .slice(0, 50)
-    .forEach(function(entry) {
+    .forEach(function (entry) {
       // workaround for Gallery API using internal URLs
       const match = internalURL.exec(entry.link);
       if (match) {
@@ -49,16 +46,16 @@ function ready(err, gallery) {
 
   const player = new Player(entries, scene, globe);
 
-  d3.select('#map').on('click', function() {
+  d3.select('#map').on('click', function () {
     player.new();
   });
 
-  d3.select('body').on('keydown', function() {
-    switch (d3.event.keyCode) {
-      case 39:
+  d3.select('body').on('keydown', function (event) {
+    switch (event.code) {
+      case 'ArrowRight':
         player.next();
         break;
-      case 37:
+      case 'ArrowLeft':
         player.previous();
         document.body.focus();
         break;

@@ -1,13 +1,13 @@
 /* eslint-env jest */
-const Player = require('./player');
-const util = require('./util');
+import Player from './Player.js';
+import {addGlobals, restoreGlobals} from './test-util.js';
 
-describe('Player', function() {
-  beforeEach(util.addGlobals);
+describe('Player', function () {
+  beforeEach(addGlobals);
 
-  afterEach(util.restoreGlobals);
+  afterEach(restoreGlobals);
 
-  test('constructor', function() {
+  test('constructor', function () {
     const player = new Player();
     expect(player).toBeInstanceOf(Player);
 
@@ -18,7 +18,7 @@ describe('Player', function() {
     });
   });
 
-  test('#_syncStore()', function() {
+  test('#_syncStore()', function () {
     const player = new Player();
 
     player.entries = {
@@ -35,7 +35,7 @@ describe('Player', function() {
     });
   });
 
-  test('#_syncStore() - new entry', function() {
+  test('#_syncStore() - new entry', function () {
     const player = new Player();
 
     player.store.set('views', {
@@ -60,7 +60,7 @@ describe('Player', function() {
     });
   });
 
-  test('#_syncStore() - new entry, many previous views', function() {
+  test('#_syncStore() - new entry, many previous views', function () {
     const player = new Player();
 
     player.store.set('views', {

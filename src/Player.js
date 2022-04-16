@@ -1,4 +1,4 @@
-const Store = require('./store');
+import Store from './Store.js';
 
 const MAX_HISTORY = 50;
 
@@ -21,7 +21,7 @@ function Player(entries, scene, globe) {
 /**
  * Show the previous entry.
  */
-Player.prototype.previous = function() {
+Player.prototype.previous = function () {
   const history = this.store.get('history');
   const index = history.current + 1;
   if (index < history.entries.length) {
@@ -34,7 +34,7 @@ Player.prototype.previous = function() {
 /**
  * Show the next entry.
  */
-Player.prototype.next = function() {
+Player.prototype.next = function () {
   const history = this.store.get('history');
   const index = history.current - 1;
   if (index >= 0) {
@@ -49,7 +49,7 @@ Player.prototype.next = function() {
 /**
  * Show a new entry.
  */
-Player.prototype.new = function() {
+Player.prototype.new = function () {
   let entry = this.store.get('next');
   if (!entry) {
     entry = this._getNext();
@@ -74,7 +74,7 @@ Player.prototype.new = function() {
  * Get the next (least frequently viewed) entry.
  * @return {Object} Scene data.
  */
-Player.prototype._getNext = function() {
+Player.prototype._getNext = function () {
   const views = this.store.get('views');
   const hits = {};
   let min = Number.POSITIVE_INFINITY;
@@ -98,7 +98,7 @@ Player.prototype._getNext = function() {
 /**
  * Preload the next image.
  */
-Player.prototype._preloadNext = function() {
+Player.prototype._preloadNext = function () {
   const entry = this._getNext();
   this.store.set('next', entry);
 
@@ -111,7 +111,7 @@ Player.prototype._preloadNext = function() {
  * @param {Object} entry Object with scene info.
  * @param {boolean} isNew Newly viewed image.
  */
-Player.prototype._show = function(entry, isNew) {
+Player.prototype._show = function (entry, isNew) {
   if (isNew) {
     this.scene.show(entry, this._preloadNext.bind(this));
   } else {
@@ -127,7 +127,7 @@ Player.prototype._show = function(entry, isNew) {
  * Synchronize the views store.  This keeps track of the number of new views per
  * scene and intializes history.
  */
-Player.prototype._syncStore = function() {
+Player.prototype._syncStore = function () {
   const views = this.store.get('views') || {};
   const added = {};
   const current = {};
@@ -155,4 +155,4 @@ Player.prototype._syncStore = function() {
   }
 };
 
-module.exports = Player;
+export default Player;
