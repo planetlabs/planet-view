@@ -1,5 +1,4 @@
-const d3 = require('d3');
-const moment = require('moment');
+import * as d3 from 'd3';
 
 /**
  * Object for displaying a single image.
@@ -15,13 +14,13 @@ function Scene(selector) {
  * @param {Object} data Data for an individual scene.
  * @param {Function} callback Called when the image loads.
  */
-Scene.prototype.show = function(data, callback) {
+Scene.prototype.show = function (data, callback) {
   this.hide();
   const url = this.getUrl(data);
   this.url = url;
 
   const image = new Image();
-  image.onload = function() {
+  image.onload = function () {
     this._show(url);
     if (callback) {
       callback();
@@ -30,7 +29,8 @@ Scene.prototype.show = function(data, callback) {
   image.src = url;
 
   // TODO: rework scene markup
-  const title = data.title + ' - ' + moment(data.images[0].date).calendar();
+  const title =
+    data.title + ' - ' + new Date(data.images[0].date).toLocaleDateString();
   d3.select('#image-title').html(
     '<a tabindex="1" href="' + data.link + '">' + title + '</a>'
   );
@@ -41,14 +41,12 @@ Scene.prototype.show = function(data, callback) {
  * Handle image loading.
  * @param {string} url The url of the loaded image.
  */
-Scene.prototype._show = function(url) {
+Scene.prototype._show = function (url) {
   if (url !== this.url) {
     // another image is loading
     return;
   }
-  this.target.style({
-    'background-image': 'url(' + url + ')',
-  });
+  this.target.style('background-image', 'url(' + url + ')');
   this.target.classed('shown', true);
 };
 
@@ -57,16 +55,16 @@ Scene.prototype._show = function(url) {
  * @param {Object} data Scene data.
  * @return {string} Scene URL.
  */
-Scene.prototype.getUrl = function(data) {
+Scene.prototype.getUrl = function (data) {
   return data.images[0].web || data.images[0].full;
 };
 
 /**
  * Hide a scene.
  */
-Scene.prototype.hide = function() {
+Scene.prototype.hide = function () {
   delete this.url;
   this.target.classed('shown', false);
 };
 
-module.exports = Scene;
+export default Scene;

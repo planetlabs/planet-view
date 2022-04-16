@@ -1,5 +1,5 @@
-const d3 = require('d3');
-const topojson = require('topojson');
+import * as d3 from 'd3';
+import {feature} from 'topojson-client';
 
 /**
  * Rendering of a globe.
@@ -10,8 +10,8 @@ const topojson = require('topojson');
 function Globe(selector, data) {
   const diameter = 80;
 
-  const projection = d3.geo
-    .orthographic()
+  const projection = d3
+    .geoOrthographic()
     .scale(diameter / 2 - 2)
     .translate([diameter / 2, diameter / 2])
     .clipAngle(90);
@@ -25,13 +25,10 @@ function Globe(selector, data) {
   const context = canvas.node().getContext('2d');
 
   this.context = context;
-  this.path = d3.geo
-    .path()
-    .projection(projection)
-    .context(context);
+  this.path = d3.geoPath().projection(projection).context(context);
   this.projection = projection;
 
-  this.land = topojson.feature(data, data.objects.land);
+  this.land = feature(data, data.objects.land);
   this.render();
 }
 
@@ -39,7 +36,7 @@ function Globe(selector, data) {
  * Render the globe with an optional locator circle.
  * @param {Object} circle Data for the optional locator circle.
  */
-Globe.prototype.render = function(circle) {
+Globe.prototype.render = function (circle) {
   const context = this.context;
   const diameter = context.canvas.width;
 
@@ -69,11 +66,8 @@ Globe.prototype.render = function(circle) {
  * Rotate the globe to show the given point.
  * @param {Array.<number>} point Geographic location (lon, lat).
  */
-Globe.prototype.show = function(point) {
-  const circle = d3.geo
-    .circle()
-    .origin(point)
-    .angle(6)();
+Globe.prototype.show = function (point) {
+  const circle = d3.geoCircle().center(point).radius(6)();
   const rotate = d3.interpolate(this.projection.rotate(), [
     -point[0],
     -point[1],
@@ -81,12 +75,12 @@ Globe.prototype.show = function(point) {
   const self = this;
   d3.transition()
     .duration(1250)
-    .tween('rotate', function() {
-      return function(t) {
+    .tween('rotate', function () {
+      return function (t) {
         self.projection.rotate(rotate(t));
         self.render(circle);
       };
     });
 };
 
-module.exports = Globe;
+export default Globe;
