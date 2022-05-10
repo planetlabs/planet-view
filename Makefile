@@ -19,6 +19,8 @@ $(UPDATE): node_modules/.install
 	@json --in-place -f package.json -e "this.version='$(NEW_VERSION)'";
 	@json --in-place -f $(SRC_DIR)/manifest.json -e "this.version='$(NEW_VERSION)'";
 	@git add package.json $(SRC_DIR)/manifest.json
+	@npm install
+	@git add package-lock.json
 	git commit -m "$(NEW_VERSION)"
 	git tag -a "v$(NEW_VERSION)" -m "$(NEW_VERSION)"
 
