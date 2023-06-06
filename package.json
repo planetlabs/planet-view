@@ -32,7 +32,7 @@
     "jest": "^27.5.1",
     "json": "^11.0.0",
     "semver": "^7.3.7",
-    "vite": "^2.9.13"
+    "vite": "^2.9.16"
   },
   "eslintConfig": {
     "extends": "planet"
