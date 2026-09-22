@@ -1,4 +1,3 @@
-/* eslint-env jest */
 import Store from './Store.js';
 import {addGlobals, restoreGlobals} from './test-util.js';
 

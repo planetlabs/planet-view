@@ -1,4 +1,3 @@
-/* eslint-env jest */
 import Player from './Player.js';
 import {addGlobals, restoreGlobals} from './test-util.js';
 

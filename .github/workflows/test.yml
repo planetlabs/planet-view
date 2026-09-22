@@ -17,12 +17,13 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set Node.js Version
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '17'
+          node-version-file: '.nvmrc'
+          cache: npm
 
       - run: npm ci
       - run: npm test
