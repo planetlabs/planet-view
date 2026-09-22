@@ -29,10 +29,9 @@ Scene.prototype.show = function (data, callback) {
   image.src = url;
 
   // TODO: rework scene markup
-  const title =
-    data.title + ' - ' + new Date(data.images[0].date).toLocaleDateString();
+  const title = data.title + ' - ' + new Date(data.date).toLocaleDateString();
   d3.select('#image-title').html(
-    '<a tabindex="1" href="' + data.link + '">' + title + '</a>'
+    '<a tabindex="1" href="' + data.link + '">' + title + '</a>',
   );
   d3.select('#copyright-year').text(new Date(data.date).getFullYear());
 };

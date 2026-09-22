@@ -17,7 +17,7 @@
     "start": "vite serve",
     "build": "vite build",
     "postbuild": "mkdir -p dist/assets && cp src/manifest.json dist/manifest.json && cp -r src/assets/images dist/assets",
-    "lint": "eslint src",
+    "lint": "eslint src vite.config.js eslint.config.js",
     "pretest": "npm run lint",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
@@ -27,15 +27,13 @@
   },
   "devDependencies": {
     "dom-storage": "^2.1.0",
-    "eslint": "^8.13.0",
-    "eslint-config-planet": "^20.0.3",
-    "jest": "^27.5.1",
+    "eslint": "^9.39.5",
+    "eslint-config-planet": "^23.3.0",
+    "globals": "^17.12.0",
+    "jest": "^30.5.2",
     "json": "^11.0.0",
-    "semver": "^7.3.7",
-    "vite": "^2.9.16"
-  },
-  "eslintConfig": {
-    "extends": "planet"
+    "semver": "^7.8.5",
+    "vite": "^8.3.0"
   },
   "jest": {
     "transform": {}

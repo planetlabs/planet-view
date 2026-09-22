@@ -4,10 +4,8 @@ import Player from './Player.js';
 import Scene from './Scene.js';
 import world from './assets/data/world-110m.json';
 
-const internalURL =
-  /gallery\.prod\.planet-labs\.com\/gallery\/v1\/posts\/(.*)$/;
-const externalURL = 'https://www.planet.com/gallery/#!/post';
-const postsURL = 'https://api.planet.com/gallery/v1/posts';
+const postsURL = 'https://assets.planet.com/gallery_posts.json';
+const postIdFromLink = /#!\/post\/([^/?#]+)/;
 
 // trigger data loading
 fetch(postsURL)
@@ -17,8 +15,7 @@ fetch(postsURL)
 
 /**
  * Handle loaded data.
- * @param {Object} world Land and country data.
- * @param {Document} gallery Gallery feed.
+ * @param {Array} gallery Gallery posts.
  */
 function ready(gallery) {
   const scene = new Scene('#scene');
@@ -31,16 +28,12 @@ function ready(gallery) {
       return new Date(a.date) > new Date(b.date) ? -1 : 1;
     })
     .filter(function (entry) {
-      return entry.type === 'single';
+      return entry.type === 'single' && hasValidCoordinates(entry);
     })
     .slice(0, 50)
     .forEach(function (entry) {
-      // workaround for Gallery API using internal URLs
-      const match = internalURL.exec(entry.link);
-      if (match) {
-        entry.link = externalURL + '/' + match[1]; // eslint-disable-line
-      }
-
+      const match = postIdFromLink.exec(entry.link);
+      entry.id = match ? match[1] : entry.link;
       entries[entry.id] = entry;
     });
 
@@ -65,4 +58,19 @@ function ready(gallery) {
   });
 
   player.new();
+}
+
+/**
+ * Check whether a post has usable geographic coordinates.
+ * @param {Object} entry Gallery post.
+ * @return {boolean} True if coordinates are valid lon/lat.
+ */
+function hasValidCoordinates(entry) {
+  const coordinates = entry.coordinates;
+  return (
+    Array.isArray(coordinates) &&
+    coordinates.length === 2 &&
+    Math.abs(coordinates[0]) <= 180 &&
+    Math.abs(coordinates[1]) <= 90
+  );
 }
