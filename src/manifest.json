@@ -11,5 +11,10 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "incognito": "not_allowed"
+  "incognito": "not_allowed",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{9f8eada0-e00a-4923-a337-2451ad0f2578}"
+    }
+  }
 }
