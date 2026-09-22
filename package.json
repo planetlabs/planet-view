@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "dom-storage": "^2.1.0",
-    "eslint": "^9.39.5",
+    "eslint": "^10.10.0",
     "eslint-config-planet": "^23.3.0",
     "globals": "^17.12.0",
     "jest": "^30.5.2",
